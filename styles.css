@@ -263,4 +263,29 @@ input:focus, select:focus{ border-color: rgba(122,167,255,.55); box-shadow: 0 0 
 @media (max-width: 560px){
   .filters .field{ grid-column: span 12; }
 }
+th[data-sort]{
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+th[data-sort].active{
+  color: #e8f0ff;
+}
+
+.sort-indicator{
+  display:inline-block;
+  margin-left:6px;
+  opacity:.75;
+}
+
+th[data-sort].active.asc .sort-indicator::after{
+  content:"▲";
+  font-size:.75em;
+}
+
+th[data-sort].active.desc .sort-indicator::after{
+  content:"▼";
+  font-size:.75em;
+}
 
