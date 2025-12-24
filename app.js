@@ -105,43 +105,75 @@ function getDeep(obj, path, fallback = undefined){
 // Offers helpers
 // =====================
 function pickOfferFields(offer){
-  // soporta schema "raw Amadeus" y schema "normalizado worker"
+  // Precio / moneda (worker o raw)
   const price =
     offer?.price?.total ??
-    offer?.total_price ??            // worker
+    offer?.total_price ??
+    offer?.totalPrice ??
     offer?.price_total ??
-    offer?.total_price_amount ??
-    offer?.total ??
     offer?.price ??
     null;
 
   const currency =
     offer?.price?.currency ??
     offer?.currency ??
+    offer?.currencyCode ??
     null;
 
+  // Airline (worker o variantes)
+  const airline =
+    offer?.airline ??
+    offer?.airline_out ??
+    offer?.carrierCode ??
+    offer?.validatingAirlineCodes?.[0] ??
+    offer?.provider ??
+    null;
+
+  // Cabin (worker o variantes)
+  const cabin =
+    offer?.cabin ??
+    offer?.travelClass ??
+    offer?.class ??
+    "";
+
+  // Fechas (worker o variantes)
+  const dep =
+    offer?.departure_date ??
+    offer?.departureDate ??
+    offer?.departure_date_center ??
+    offer?.departure ??
+    null;
+
+  const ret =
+    offer?.return_date ??
+    offer?.returnDate ??
+    offer?.return ??
+    null;
+
+  // Score (worker o raw)
   const score =
     offer?.score ??
-    offer?.value_score ??            // worker (de price analysis)
+    offer?.value_score ??
     offer?.ranking?.score ??
-    offer?.choice_probability ??      // worker (prediction)
+    offer?.choice_probability ??
     null;
 
+  // Provider
   const provider =
     offer?.validatingAirlineCodes?.join?.(", ") ??
-    offer?.airline ??                // worker
+    airline ??
     offer?.provider ??
     offer?.source ??
     "—";
 
-  // Si viene normalizado por tu Worker:
-  if (offer?.departure_date || offer?.return_date) {
-    const itinerary = `${offer?.airline ?? "—"} • ${offer?.cabin ?? ""}`.trim();
-    const dates = `${offer?.departure_date ?? "—"} → ${offer?.return_date ?? "—"}`;
+  // Si tenemos fechas (worker normalizado o candidates normalizados)
+  if (dep || ret){
+    const itinerary = `${airline ?? "—"}${cabin ? ` • ${cabin}` : ""}`.trim();
+    const dates = `${dep ? String(dep).slice(0,10) : "—"} → ${ret ? String(ret).slice(0,10) : "—"}`;
     return { price, currency, score, provider, itinerary, dates };
   }
 
-  // Si viene raw amadeus:
+  // Fallback: schema raw de Amadeus (itineraries[])
   const itineraries = offer?.itineraries ?? [];
   const leg0 = itineraries?.[0];
   const leg1 = itineraries?.[1];
@@ -154,14 +186,13 @@ function pickOfferFields(offer){
     const last = segs[segs.length - 1];
     const depIATA = first?.departure?.iataCode ?? "—";
     const arrIATA = last?.arrival?.iataCode ?? "—";
-
     const depAt = first?.departure?.at ?? null;
     const arrAt = last?.arrival?.at ?? null;
 
     const depD = depAt ? String(depAt).slice(0,10) : null;
     const arrD = arrAt ? String(arrAt).slice(0,10) : null;
-
     const stops = Math.max(0, segs.length - 1);
+
     return {
       route: `${depIATA} → ${arrIATA}${stops ? ` (${stops} stop${stops>1?"s":""})` : ""}`,
       dates: `${depD ?? "—"} → ${arrD ?? "—"}`
@@ -171,13 +202,8 @@ function pickOfferFields(offer){
   const out = summarizeLeg(leg0);
   const back = summarizeLeg(leg1);
 
-  const itinerary = (leg1 && leg1?.segments?.length)
-    ? `${out.route} | ${back.route}`
-    : out.route;
-
-  const dates = (leg1 && leg1?.segments?.length)
-    ? `${out.dates} | ${back.dates}`
-    : out.dates;
+  const itinerary = (leg1 && leg1?.segments?.length) ? `${out.route} | ${back.route}` : out.route;
+  const dates = (leg1 && leg1?.segments?.length) ? `${out.dates} | ${back.dates}` : out.dates;
 
   return { price, currency, score, provider, itinerary, dates };
 }
@@ -404,8 +430,8 @@ function renderRecommendations(reco, currency){
   els.recoCard.classList.remove("hidden");
 
   candidates.forEach((c, idx) => {
-    const date = c?.date ?? c?.day ?? c?.outbound_date ?? c?.departure_date ?? c?.departureDate ?? null;
-    const price = c?.price ?? c?.min_price ?? c?.estimated_price ?? c?.total_price ?? null;
+    const date = c?.departureDate ?? c?.departure_date ?? c?.date ?? null;
+    const price = c?.total_price ?? c?.price ?? c?.min_price ?? null;
     const cur = c?.currency ?? currency ?? "USD";
     const reason = c?.reason ?? c?.note ?? null;
 
@@ -423,6 +449,7 @@ function renderRecommendations(reco, currency){
 function buildExecutiveSummary(payload, req){
   const currency = req.currency ?? "USD";
 
+  // best offer: assume offers sorted already or compute min
   const offers = payload?.offers ?? [];
   const bestOffer = offers.length ? offers.reduce((best, cur) => {
     const pb = Number(pickOfferFields(best).price);
@@ -433,14 +460,12 @@ function buildExecutiveSummary(payload, req){
   }, offers[0]) : null;
 
   const extrema = payload?.extrema ?? null;
-
-  // ⚠️ Tu worker devuelve extrema.cheapest = {date, min_price} y priciest igual
   const cheapest = getDeep(extrema, "cheapest", null);
   const priciest = getDeep(extrema, "priciest", null);
 
   const reco = payload?.recommendations ?? null;
   const recoCandidates = reco?.cheapest_date_candidates ?? [];
-  const recoHasOutOfRange = !!recoCandidates?.length;
+  const recoHasOutOfRange = recoCandidates.length > 0;
 
   const bestPrice = bestOffer ? pickOfferFields(bestOffer).price : null;
   const bestCur = bestOffer ? (pickOfferFields(bestOffer).currency ?? currency) : currency;
@@ -456,7 +481,7 @@ function buildExecutiveSummary(payload, req){
     parts.push(`No se encontraron ofertas para la consulta.`);
   }
 
-  // cheapest/priciest: tolerar "min_price" vs "price"
+  // tolerante: el worker puede enviar {min_price} o {price}
   if (cheapest?.date && (cheapest?.min_price != null || cheapest?.price != null)){
     const chPrice = cheapest?.min_price ?? cheapest?.price;
     parts.push(`Cheapest (según <code>extrema</code>): <strong>${escapeHTML(safeDate(String(cheapest.date).slice(0,10)))}</strong> @ ${escapeHTML(fmtMoney(chPrice, cheapest.currency ?? currency))}.`);
@@ -467,10 +492,31 @@ function buildExecutiveSummary(payload, req){
   }
 
   if (recoHasOutOfRange){
-    const top = recoCandidates[0];
-    const rd = top?.date ?? top?.departureDate ?? null;
-    const rp = top?.price ?? top?.min_price ?? top?.total_price ?? null;
-    parts.push(`Hay recomendación fuera del rango: <strong>${escapeHTML(safeDate(String(rd ?? "—").slice(0,10)))}</strong> ~ ${escapeHTML(fmtMoney(rp, top?.currency ?? currency))}.`);
+    const top = recoCandidates[0] ?? null;
+
+    // ✅ Prioridad correcta para tu Worker
+    const rd =
+      top?.departureDate ??
+      top?.departure_date ??
+      top?.date ??
+      null;
+
+    const rp =
+      top?.total_price ??
+      top?.price ??
+      top?.min_price ??
+      null;
+
+    const rc =
+      top?.currency ??
+      payload?.currency ??
+      "USD";
+
+    if (rd && rp != null) {
+      parts.push(`Hay recomendación fuera del rango: <strong>${escapeHTML(safeDate(String(rd).slice(0,10)))}</strong> ~ ${escapeHTML(fmtMoney(rp, rc))}.`);
+    } else {
+      parts.push(`Hay recomendación fuera del rango, pero faltan datos de fecha/precio en el primer candidato.`);
+    }
   } else if (req.enable_recommendations){
     parts.push(`No hubo fechas fuera de rango que mejoren claramente el resultado.`);
   }
