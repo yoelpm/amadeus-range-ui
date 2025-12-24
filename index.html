@@ -36,7 +36,7 @@
 
         <div class="field">
           <label for="destination">Destino</label>
-          <input id="destination" name="destination" type="text" inputmode="latin" maxlength="3" placeholder="MAD" required />
+          <input id="destination" name="destination" type="text" inputmode="latin" maxlength="3" placeholder="MIA" required />
           <div class="hint">IATA 3 letras</div>
         </div>
 
@@ -68,8 +68,8 @@
         <div class="field">
           <label for="ranking_mode">Ranking mode</label>
           <select id="ranking_mode" name="ranking_mode">
-            <option value="balanced">balanced</option>
             <option value="price">price</option>
+            <option value="balanced">balanced</option>
             <option value="score">score</option>
           </select>
         </div>
@@ -122,32 +122,31 @@
       </form>
 
       <div class="filters">
-  <div class="field">
-    <label for="filter_airline">Filtrar aerolínea</label>
-    <select id="filter_airline">
-      <option value="">Todas</option>
-    </select>
-    <div class="hint">Se llena automáticamente con las aerolíneas del resultado</div>
-  </div>
+        <div class="field">
+          <label for="filter_airline">Filtrar aerolínea</label>
+          <select id="filter_airline">
+            <option value="">Todas</option>
+          </select>
+          <div class="hint">Se llena automáticamente con las aerolíneas del resultado</div>
+        </div>
 
-  <div class="field">
-    <label for="filter_max_stops">Escalas máximas (total)</label>
-    <input id="filter_max_stops" type="number" min="0" max="6" step="1" value="6" />
-    <div class="hint">0 = directo</div>
-  </div>
+        <div class="field">
+          <label for="filter_max_stops">Escalas máximas (total)</label>
+          <input id="filter_max_stops" type="number" min="0" max="6" step="1" value="2" />
+          <div class="hint">0 = directo</div>
+        </div>
 
-  <div class="field">
-    <label for="filter_max_duration">Duración máxima total (horas)</label>
-    <input id="filter_max_duration" type="number" min="1" max="60" step="1" value="60" />
-    <div class="hint">Suma ida + vuelta si están disponibles</div>
-  </div>
+        <div class="field">
+          <label for="filter_max_duration">Duración máxima total (horas)</label>
+          <input id="filter_max_duration" type="number" min="1" max="60" step="1" value="40" />
+          <div class="hint">Suma ida + vuelta si están disponibles</div>
+        </div>
 
-  <div class="actions">
-    <button id="btnApplyFilters" class="btn btn-secondary" type="button">Aplicar filtros</button>
-    <button id="btnClearFilters" class="btn btn-secondary" type="button">Limpiar filtros</button>
-  </div>
-</div>
-
+        <div class="actions">
+          <button id="btnApplyFilters" class="btn btn-secondary" type="button">Aplicar filtros</button>
+          <button id="btnClearFilters" class="btn btn-secondary" type="button">Limpiar filtros</button>
+        </div>
+      </div>
 
       <div id="statusBar" class="status-bar hidden"></div>
     </section>
@@ -168,27 +167,21 @@
       <section class="card">
         <div class="card-header">
           <h2>Ranking</h2>
-          <div class="controls">
-            <label class="muted small">Ordenar:</label>
-            <select id="sortMode" class="select">
-              <option value="price_asc">Precio ↑</option>
-              <option value="price_desc">Precio ↓</option>
-              <option value="score_desc">Score ↓</option>
-              <option value="score_asc">Score ↑</option>
-            </select>
-          </div>
+          <div class="muted small">Click en headers para ordenar (↑↓)</div>
         </div>
 
         <div class="table-wrap">
           <table class="table" id="offersTable">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Itinerario</th>
-                <th>Fechas</th>
-                <th class="right">Precio</th>
-                <th class="right">Score</th>
-                <th>Provider</th>
+                <th data-sort="price" class="sortable right">Precio <span class="sort-indicator"></span></th>
+                <th data-sort="airline" class="sortable">Aerolínea <span class="sort-indicator"></span></th>
+                <th data-sort="dep_date" class="sortable">Salida <span class="sort-indicator"></span></th>
+                <th data-sort="ret_date" class="sortable">Regreso <span class="sort-indicator"></span></th>
+                <th data-sort="stops_total" class="sortable right">Escalas <span class="sort-indicator"></span></th>
+                <th data-sort="duration_total" class="sortable right">Duración <span class="sort-indicator"></span></th>
+                <th data-sort="score" class="sortable right">Score <span class="sort-indicator"></span></th>
+                <th>Link</th>
               </tr>
             </thead>
             <tbody></tbody>
