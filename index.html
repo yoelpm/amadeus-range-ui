@@ -115,11 +115,39 @@
               <input id="use_timeout" type="checkbox" checked />
               <span>Timeout</span>
             </label>
-            <input id="timeout_ms" type="number" min="1000" max="180000" step="1000" value="30000" class="timeout-input" />
+            <input id="timeout_ms" type="number" min="1000" max="180000" step="1000" value="120000" class="timeout-input" />
             <span class="muted small">ms</span>
           </div>
         </div>
       </form>
+
+      <div class="filters">
+  <div class="field">
+    <label for="filter_airline">Filtrar aerolínea</label>
+    <select id="filter_airline">
+      <option value="">Todas</option>
+    </select>
+    <div class="hint">Se llena automáticamente con las aerolíneas del resultado</div>
+  </div>
+
+  <div class="field">
+    <label for="filter_max_stops">Escalas máximas (total)</label>
+    <input id="filter_max_stops" type="number" min="0" max="6" step="1" value="6" />
+    <div class="hint">0 = directo</div>
+  </div>
+
+  <div class="field">
+    <label for="filter_max_duration">Duración máxima total (horas)</label>
+    <input id="filter_max_duration" type="number" min="1" max="60" step="1" value="60" />
+    <div class="hint">Suma ida + vuelta si están disponibles</div>
+  </div>
+
+  <div class="actions">
+    <button id="btnApplyFilters" class="btn btn-secondary" type="button">Aplicar filtros</button>
+    <button id="btnClearFilters" class="btn btn-secondary" type="button">Limpiar filtros</button>
+  </div>
+</div>
+
 
       <div id="statusBar" class="status-bar hidden"></div>
     </section>
