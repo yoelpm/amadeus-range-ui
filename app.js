@@ -12,7 +12,6 @@ const els = {
 
   offersTableBody: document.querySelector("#offersTable tbody"),
   offersEmpty: document.getElementById("offersEmpty"),
-  sortMode: document.getElementById("sortMode"),
 
   heatmapLegend: document.getElementById("heatmapLegend"),
   heatmapGrid: document.getElementById("heatmapGrid"),
@@ -30,7 +29,7 @@ const els = {
   useTimeout: document.getElementById("use_timeout"),
   timeoutMs: document.getElementById("timeout_ms"),
 
-  // ✅ NEW: filtros (si existen en el HTML)
+  // filtros
   filterAirline: document.getElementById("filter_airline"),
   filterMaxStops: document.getElementById("filter_max_stops"),
   filterMaxDuration: document.getElementById("filter_max_duration"),
@@ -38,29 +37,24 @@ const els = {
   btnClearFilters: document.getElementById("btnClearFilters"),
 };
 
-let lastResponse = null;
-// lastOffers = lista "base" sin filtrar (tal como viene del worker)
-let lastOffers = null;
+let lastResponse = null;   // response completo (para dictionaries, etc)
+let lastOffers = null;     // offers base (sin filtrar)
+let lastRequest = null;    // request actual
+
+let sortState = { key: "price", dir: "asc" }; // default: precio asc
 
 function setStatus(type, msg){
   els.statusBar.classList.remove("hidden","ok","err","warn");
   els.statusBar.classList.add(type);
   els.statusBar.textContent = msg;
 }
-
 function clearStatus(){
   els.statusBar.classList.add("hidden");
   els.statusBar.textContent = "";
   els.statusBar.classList.remove("ok","err","warn");
 }
-
-function showResults(){
-  els.results.classList.remove("hidden");
-}
-
-function hideResults(){
-  els.results.classList.add("hidden");
-}
+function showResults(){ els.results.classList.remove("hidden"); }
+function hideResults(){ els.results.classList.add("hidden"); }
 
 function normalizeIATA(s){
   return (s || "").trim().toUpperCase().slice(0,3);
@@ -101,141 +95,30 @@ function getDeep(obj, path, fallback = undefined){
   }
 }
 
-// =====================
-// Offers helpers
-// =====================
-function pickOfferFields(offer){
-  // Precio / moneda (worker o raw)
-  const price =
-    offer?.price?.total ??
-    offer?.total_price ??
-    offer?.totalPrice ??
-    offer?.price_total ??
-    offer?.price ??
-    null;
-
-  const currency =
-    offer?.price?.currency ??
-    offer?.currency ??
-    offer?.currencyCode ??
-    null;
-
-  // Airline (worker o variantes)
-  const airline =
-    offer?.airline ??
-    offer?.airline_out ??
-    offer?.carrierCode ??
-    offer?.validatingAirlineCodes?.[0] ??
-    offer?.provider ??
-    null;
-
-  // Cabin (worker o variantes)
-  const cabin =
-    offer?.cabin ??
-    offer?.travelClass ??
-    offer?.class ??
-    "";
-
-  // Fechas (worker o variantes)
-  const dep =
-    offer?.departure_date ??
-    offer?.departureDate ??
-    offer?.departure_date_center ??
-    offer?.departure ??
-    null;
-
-  const ret =
-    offer?.return_date ??
-    offer?.returnDate ??
-    offer?.return ??
-    null;
-
-  // Score (worker o raw)
-  const score =
-    offer?.score ??
-    offer?.value_score ??
-    offer?.ranking?.score ??
-    offer?.choice_probability ??
-    null;
-
-  // Provider
-  const provider =
-    offer?.validatingAirlineCodes?.join?.(", ") ??
-    airline ??
-    offer?.provider ??
-    offer?.source ??
-    "—";
-
-  // Si tenemos fechas (worker normalizado o candidates normalizados)
-  if (dep || ret){
-    const itinerary = `${airline ?? "—"}${cabin ? ` • ${cabin}` : ""}`.trim();
-    const dates = `${dep ? String(dep).slice(0,10) : "—"} → ${ret ? String(ret).slice(0,10) : "—"}`;
-    return { price, currency, score, provider, itinerary, dates };
-  }
-
-  // Fallback: schema raw de Amadeus (itineraries[])
-  const itineraries = offer?.itineraries ?? [];
-  const leg0 = itineraries?.[0];
-  const leg1 = itineraries?.[1];
-
-  const summarizeLeg = (leg) => {
-    const segs = leg?.segments ?? [];
-    if (!segs.length) return { route: "—", dates: "—" };
-
-    const first = segs[0];
-    const last = segs[segs.length - 1];
-    const depIATA = first?.departure?.iataCode ?? "—";
-    const arrIATA = last?.arrival?.iataCode ?? "—";
-    const depAt = first?.departure?.at ?? null;
-    const arrAt = last?.arrival?.at ?? null;
-
-    const depD = depAt ? String(depAt).slice(0,10) : null;
-    const arrD = arrAt ? String(arrAt).slice(0,10) : null;
-    const stops = Math.max(0, segs.length - 1);
-
-    return {
-      route: `${depIATA} → ${arrIATA}${stops ? ` (${stops} stop${stops>1?"s":""})` : ""}`,
-      dates: `${depD ?? "—"} → ${arrD ?? "—"}`
-    };
-  };
-
-  const out = summarizeLeg(leg0);
-  const back = summarizeLeg(leg1);
-
-  const itinerary = (leg1 && leg1?.segments?.length) ? `${out.route} | ${back.route}` : out.route;
-  const dates = (leg1 && leg1?.segments?.length) ? `${out.dates} | ${back.dates}` : out.dates;
-
-  return { price, currency, score, provider, itinerary, dates };
+function escapeHTML(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
 
-function sortOffers(offers, mode){
-  const copy = [...(offers ?? [])];
-
-  const getPrice = (o) => {
-    const { price } = pickOfferFields(o);
-    const n = Number(price);
-    return Number.isFinite(n) ? n : Number.POSITIVE_INFINITY;
-  };
-
-  const getScore = (o) => {
-    const { score } = pickOfferFields(o);
-    const n = Number(score);
-    return Number.isFinite(n) ? n : Number.NEGATIVE_INFINITY;
-  };
-
-  switch (mode){
-    case "price_desc": copy.sort((a,b)=> getPrice(b)-getPrice(a)); break;
-    case "score_asc": copy.sort((a,b)=> getScore(a)-getScore(b)); break;
-    case "score_desc": copy.sort((a,b)=> getScore(b)-getScore(a)); break;
-    case "price_asc":
-    default: copy.sort((a,b)=> getPrice(a)-getPrice(b)); break;
-  }
-  return copy;
+// --------- Airline dictionary ----------
+function airlineFullName(code, payload){
+  const c = String(code ?? "").trim();
+  if (!c) return "—";
+  const name = payload?.dictionaries?.carriers?.[c];
+  return name ? `${name} (${c})` : c;
 }
 
-// =====================
-// Filters (client-side)
-// =====================
+function googleFlightsLink(origin, destination, depDate, retDate, airlineCode){
+  // Link “búsqueda” (no deep-link exacto al offer). Incluye el código para acercar resultados.
+  const q = `${origin} ${destination} ${depDate} ${retDate}${airlineCode ? ` ${airlineCode}` : ""}`;
+  return `https://www.google.com/travel/flights?q=${encodeURIComponent(q)}`;
+}
+
+// --------- Duration helpers ----------
 function parseDurationToMinutes(isoDur){
   if (!isoDur || typeof isoDur !== "string") return null;
   const m = /^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/.exec(isoDur);
@@ -254,27 +137,70 @@ function durationMinutesFromWorkerOffer(o){
   return (out == null && back == null) ? null : sum;
 }
 
+function fmtDurationMinutes(mins){
+  if (mins == null) return "—";
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return `${h}h ${String(m).padStart(2,"0")}m`;
+}
+
+// --------- Normalize offer row ----------
+function getOfferRow(o, payload, req){
+  const dep = o?.departure_date ?? o?.departureDate ?? null;
+  const ret = o?.return_date ?? o?.returnDate ?? null;
+
+  const airlineCode = o?.airline ?? o?.carrierCode ?? o?.airline_out ?? null;
+  const airlineLabel = airlineFullName(airlineCode, payload);
+
+  const cabin = o?.cabin ?? o?.travelClass ?? o?.class ?? "—";
+
+  const stopsTotalRaw = Number(o?.stops_total);
+  const stopsTotal = Number.isFinite(stopsTotalRaw) ? stopsTotalRaw : null;
+
+  const durMin = durationMinutesFromWorkerOffer(o);
+
+  const price = Number(o?.total_price ?? o?.price?.total ?? o?.price_total ?? o?.price ?? NaN);
+  const currency = o?.currency ?? o?.price?.currency ?? payload?.currency ?? req?.currency ?? "USD";
+
+  const score = Number(o?.value_score ?? o?.choice_probability ?? o?.score ?? NaN);
+
+  const depDate = dep ? String(dep).slice(0,10) : null;
+  const retDate = ret ? String(ret).slice(0,10) : null;
+
+  const link = (req?.origin && req?.destination && depDate && retDate)
+    ? googleFlightsLink(req.origin, req.destination, depDate, retDate, airlineCode)
+    : null;
+
+  return {
+    airlineCode,
+    airlineLabel,
+    cabin,
+    depDate,
+    retDate,
+    stopsTotal,
+    durMin,
+    price,
+    currency,
+    score,
+    link
+  };
+}
+
+// =====================
+// Filters
+// =====================
 function applyClientFilters(offers){
-  // Si el HTML no tiene filtros, no filtramos.
-  const hasFilters =
-    !!els.filterAirline || !!els.filterMaxStops || !!els.filterMaxDuration;
-
-  if (!hasFilters) return offers ?? [];
-
   const airline = els.filterAirline?.value || "";
   const maxStops = Number(els.filterMaxStops?.value ?? 999);
   const maxDurHours = Number(els.filterMaxDuration?.value ?? 999);
   const maxDurMin = maxDurHours * 60;
 
   return (offers ?? []).filter(o => {
-    // airline (worker: o.airline)
     if (airline && String(o?.airline ?? "") !== airline) return false;
 
-    // stops (worker: o.stops_total)
     const st = Number(o?.stops_total);
     if (Number.isFinite(maxStops) && Number.isFinite(st) && st > maxStops) return false;
 
-    // duration total (worker: duration_out + duration_back)
     const dur = durationMinutesFromWorkerOffer(o);
     if (Number.isFinite(maxDurMin) && dur != null && dur > maxDurMin) return false;
 
@@ -289,33 +215,69 @@ function populateAirlineFilter(offers){
     if (o?.airline) set.add(String(o.airline));
   }
   const list = [...set].sort();
+
+  // label con diccionario si existe
   els.filterAirline.innerHTML =
     `<option value="">Todas</option>` +
-    list.map(a => `<option value="${escapeHTML(a)}">${escapeHTML(a)}</option>`).join("");
+    list.map(code => {
+      const label = airlineFullName(code, lastResponse);
+      return `<option value="${escapeHTML(code)}">${escapeHTML(label)}</option>`;
+    }).join("");
 }
 
 function clearFiltersToDefaults(){
   if (els.filterAirline) els.filterAirline.value = "";
-  if (els.filterMaxStops) els.filterMaxStops.value = "6";
-  if (els.filterMaxDuration) els.filterMaxDuration.value = "60";
+  if (els.filterMaxStops) els.filterMaxStops.value = "2";
+  if (els.filterMaxDuration) els.filterMaxDuration.value = "40";
 }
 
-// Aplica filtros + sort + render
-function rerenderOffers(){
-  if (!lastOffers) return;
-  const payload = readFormPayload();
+// =====================
+// Sorting (table headers)
+// =====================
+function sortOffersByColumn(offers){
+  const key = sortState.key;
+  const dir = sortState.dir === "desc" ? -1 : 1;
+  const arr = [...(offers ?? [])];
 
-  const filtered = applyClientFilters(lastOffers);
-  const sorted = sortOffers(filtered, els.sortMode.value);
-  renderOffersTable(sorted, payload.currency);
+  const v = (o) => {
+    const r = getOfferRow(o, lastResponse, lastRequest);
+    switch (key){
+      case "airline": return r.airlineLabel ?? "";
+      case "dep_date": return r.depDate ?? "";
+      case "ret_date": return r.retDate ?? "";
+      case "stops_total": return r.stopsTotal ?? 999;
+      case "duration_total": return r.durMin ?? 1e12;
+      case "score": return Number.isFinite(r.score) ? r.score : -1;
+      case "price":
+      default: return Number.isFinite(r.price) ? r.price : 1e18;
+    }
+  };
 
-  // (opcional futuro) recalcular extrema/heatmap filtrado
+  arr.sort((a,b) => {
+    const av = v(a);
+    const bv = v(b);
+    if (typeof av === "string" || typeof bv === "string"){
+      return dir * String(av).localeCompare(String(bv));
+    }
+    return dir * (Number(av) - Number(bv));
+  });
+  return arr;
+}
+
+function updateSortIndicators(){
+  document.querySelectorAll("#offersTable thead th[data-sort]").forEach(th => {
+    th.classList.remove("active","asc","desc");
+    const k = th.getAttribute("data-sort");
+    if (k === sortState.key){
+      th.classList.add("active", sortState.dir);
+    }
+  });
 }
 
 // =====================
 // Renderers
 // =====================
-function renderOffersTable(offers, currencyFallback){
+function renderOffersTable(offers){
   els.offersTableBody.innerHTML = "";
   if (!offers?.length){
     els.offersEmpty.classList.remove("hidden");
@@ -323,33 +285,41 @@ function renderOffersTable(offers, currencyFallback){
   }
   els.offersEmpty.classList.add("hidden");
 
-  offers.forEach((o, idx) => {
-    const f = pickOfferFields(o);
+  offers.forEach((o) => {
+    const r = getOfferRow(o, lastResponse, lastRequest);
+
+    const priceStr = fmtMoney(r.price, r.currency);
+    const scoreStr = Number.isFinite(r.score) ? r.score.toFixed(4) : "—";
+    const stopsStr = (r.stopsTotal == null) ? "—" : String(r.stopsTotal);
+    const durStr = fmtDurationMinutes(r.durMin);
+
     const tr = document.createElement("tr");
-
-    const cur = f.currency ?? currencyFallback ?? "USD";
-    const priceStr = fmtMoney(f.price, cur);
-    const scoreStr = (f.score == null || Number.isNaN(Number(f.score))) ? "—" : Number(f.score).toFixed(4);
-
     tr.innerHTML = `
-      <td>${idx + 1}</td>
-      <td>${escapeHTML(f.itinerary)}</td>
-      <td>${escapeHTML(f.dates)}</td>
       <td class="right">${escapeHTML(priceStr)}</td>
+      <td>${escapeHTML(`${r.airlineLabel} • ${r.cabin}`)}</td>
+      <td>${escapeHTML(r.depDate ?? "—")}</td>
+      <td>${escapeHTML(r.retDate ?? "—")}</td>
+      <td class="right">${escapeHTML(stopsStr)}</td>
+      <td class="right">${escapeHTML(durStr)}</td>
       <td class="right">${escapeHTML(scoreStr)}</td>
-      <td>${escapeHTML(String(f.provider ?? "—"))}</td>
+      <td>${r.link ? `<a href="${escapeHTML(r.link)}" target="_blank" rel="noopener noreferrer">Ver</a>` : "—"}</td>
     `;
     els.offersTableBody.appendChild(tr);
   });
 }
 
-function escapeHTML(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+function makeSwatch(label, kind){
+  const el = document.createElement("div");
+  el.className = "swatch";
+  const dot = document.createElement("div");
+  dot.className = "dot";
+  if (kind === "cheapest") dot.style.background = "rgba(107,255,176,.25)";
+  if (kind === "priciest") dot.style.background = "rgba(255,107,107,.22)";
+  el.appendChild(dot);
+  const t = document.createElement("span");
+  t.textContent = label;
+  el.appendChild(t);
+  return el;
 }
 
 function renderHeatmap(heatmap, currency, extrema){
@@ -362,23 +332,40 @@ function renderHeatmap(heatmap, currency, extrema){
   }
   els.heatmapEmpty.classList.add("hidden");
 
-  const rows = heatmap
-    .map(x => ({
-      date: x?.date ?? x?.day ?? x?.departure_date ?? x?.outbound_date ?? null,
-      min_price: x?.min_price ?? x?.minPrice ?? x?.price ?? null,
-      currency: x?.currency ?? currency ?? "USD",
-      meta: x
-    }))
-    .filter(x => x.date);
+  // ✅ FIX: dedup por fecha (tomamos min_price mínimo por día)
+  const byDate = new Map();
+  for (const x of heatmap ?? []) {
+    const dateRaw = x?.date ?? x?.day ?? x?.departure_date ?? x?.outbound_date ?? null;
+    if (!dateRaw) continue;
+    const d = String(dateRaw).slice(0,10);
 
-  const cheapestDate = getDeep(extrema, "cheapest.date", null) ?? getDeep(extrema, "cheapest_day", null);
-  const priciestDate = getDeep(extrema, "priciest.date", null) ?? getDeep(extrema, "priciest_day", null);
+    const p = x?.min_price ?? x?.minPrice ?? x?.price ?? null;
+    const cur = x?.currency ?? currency ?? "USD";
+
+    if (!byDate.has(d)) {
+      byDate.set(d, { date: d, min_price: p, currency: cur });
+    } else {
+      const prev = byDate.get(d);
+      const prevP = prev?.min_price;
+      if (prevP == null) {
+        prev.min_price = p;
+        prev.currency = cur;
+      } else if (p != null && Number(p) < Number(prevP)) {
+        prev.min_price = p;
+        prev.currency = cur;
+      }
+      byDate.set(d, prev);
+    }
+  }
+
+  const rows = [...byDate.values()].sort((a,b)=> String(a.date).localeCompare(String(b.date)));
+
+  const cheapestDate = getDeep(extrema, "cheapest.date", null);
+  const priciestDate = getDeep(extrema, "priciest.date", null);
 
   els.heatmapLegend.appendChild(makeSwatch("Cheapest", "cheapest"));
   els.heatmapLegend.appendChild(makeSwatch("Priciest", "priciest"));
   els.heatmapLegend.appendChild(makeSwatch("Other", "other"));
-
-  rows.sort((a,b)=> String(a.date).localeCompare(String(b.date)));
 
   rows.forEach(r => {
     const cell = document.createElement("div");
@@ -403,20 +390,6 @@ function renderHeatmap(heatmap, currency, extrema){
   });
 }
 
-function makeSwatch(label, kind){
-  const el = document.createElement("div");
-  el.className = "swatch";
-  const dot = document.createElement("div");
-  dot.className = "dot";
-  if (kind === "cheapest") dot.style.background = "rgba(107,255,176,.25)";
-  if (kind === "priciest") dot.style.background = "rgba(255,107,107,.22)";
-  el.appendChild(dot);
-  const t = document.createElement("span");
-  t.textContent = label;
-  el.appendChild(t);
-  return el;
-}
-
 function renderRecommendations(reco, currency){
   const candidates = reco?.cheapest_date_candidates ?? reco?.candidates ?? [];
   els.recoList.innerHTML = "";
@@ -430,17 +403,20 @@ function renderRecommendations(reco, currency){
   els.recoCard.classList.remove("hidden");
 
   candidates.forEach((c, idx) => {
-    const date = c?.departureDate ?? c?.departure_date ?? c?.date ?? null;
-    const price = c?.total_price ?? c?.price ?? c?.min_price ?? null;
-    const cur = c?.currency ?? currency ?? "USD";
-    const reason = c?.reason ?? c?.note ?? null;
+    // candidates vienen en tu schema normalizado del worker (igual que offers)
+    const r = getOfferRow(c, lastResponse, lastRequest);
+
+    const priceStr = fmtMoney(r.price, r.currency);
+    const stopsStr = (r.stopsTotal == null) ? "—" : String(r.stopsTotal);
+    const durStr = fmtDurationMinutes(r.durMin);
 
     const div = document.createElement("div");
     div.className = "reco-item";
     div.innerHTML = `
-      <div class="title">#${idx + 1} • ${escapeHTML(safeDate(String(date ?? "—").slice(0,10)))}</div>
-      <div class="meta">${escapeHTML(reason ?? "Candidata recomendada")}</div>
-      <div class="price">${escapeHTML(fmtMoney(price, cur))}</div>
+      <div class="title">#${idx + 1} • ${escapeHTML(r.depDate ?? "—")} → ${escapeHTML(r.retDate ?? "—")}</div>
+      <div class="meta">${escapeHTML(`${r.airlineLabel} • ${r.cabin} • escalas: ${stopsStr} • duración: ${durStr}`)}</div>
+      <div class="price">${escapeHTML(priceStr)}</div>
+      <div class="meta">${r.link ? `<a href="${escapeHTML(r.link)}" target="_blank" rel="noopener noreferrer">Ver en Google Flights</a>` : ""}</div>
     `;
     els.recoList.appendChild(div);
   });
@@ -449,11 +425,10 @@ function renderRecommendations(reco, currency){
 function buildExecutiveSummary(payload, req){
   const currency = req.currency ?? "USD";
 
-  // best offer: assume offers sorted already or compute min
   const offers = payload?.offers ?? [];
   const bestOffer = offers.length ? offers.reduce((best, cur) => {
-    const pb = Number(pickOfferFields(best).price);
-    const pc = Number(pickOfferFields(cur).price);
+    const pb = Number(getOfferRow(best, payload, req).price);
+    const pc = Number(getOfferRow(cur, payload, req).price);
     if (!Number.isFinite(pb)) return cur;
     if (!Number.isFinite(pc)) return best;
     return pc < pb ? cur : best;
@@ -467,24 +442,17 @@ function buildExecutiveSummary(payload, req){
   const recoCandidates = reco?.cheapest_date_candidates ?? [];
   const recoHasOutOfRange = recoCandidates.length > 0;
 
-  const bestPrice = bestOffer ? pickOfferFields(bestOffer).price : null;
-  const bestCur = bestOffer ? (pickOfferFields(bestOffer).currency ?? currency) : currency;
-
-  const centerOut = req.date_center;
-  const centerRet = req.return_center;
-  const range = req.range_days;
-
   const parts = [];
   if (bestOffer){
-    parts.push(`Mejor oferta encontrada: <strong>${escapeHTML(fmtMoney(bestPrice, bestCur))}</strong>.`);
+    const r = getOfferRow(bestOffer, payload, req);
+    parts.push(`Mejor oferta encontrada: <strong>${escapeHTML(fmtMoney(r.price, r.currency ?? currency))}</strong>.`);
   } else {
     parts.push(`No se encontraron ofertas para la consulta.`);
   }
 
-  // tolerante: el worker puede enviar {min_price} o {price}
   if (cheapest?.date && (cheapest?.min_price != null || cheapest?.price != null)){
     const chPrice = cheapest?.min_price ?? cheapest?.price;
-    parts.push(`Cheapest (según <code>extrema</code>): <strong>${escapeHTML(safeDate(String(cheapest.date).slice(0,10)))}</strong> @ ${escapeHTML(fmtMoney(chPrice, cheapest.currency ?? currency))}.`);
+    parts.push(`Cheapest: <strong>${escapeHTML(safeDate(String(cheapest.date).slice(0,10)))}</strong> @ ${escapeHTML(fmtMoney(chPrice, cheapest.currency ?? currency))}.`);
   }
   if (priciest?.date && (priciest?.min_price != null || priciest?.price != null)){
     const prPrice = priciest?.min_price ?? priciest?.price;
@@ -493,29 +461,11 @@ function buildExecutiveSummary(payload, req){
 
   if (recoHasOutOfRange){
     const top = recoCandidates[0] ?? null;
-
-    // ✅ Prioridad correcta para tu Worker
-    const rd =
-      top?.departureDate ??
-      top?.departure_date ??
-      top?.date ??
-      null;
-
-    const rp =
-      top?.total_price ??
-      top?.price ??
-      top?.min_price ??
-      null;
-
-    const rc =
-      top?.currency ??
-      payload?.currency ??
-      "USD";
-
-    if (rd && rp != null) {
-      parts.push(`Hay recomendación fuera del rango: <strong>${escapeHTML(safeDate(String(rd).slice(0,10)))}</strong> ~ ${escapeHTML(fmtMoney(rp, rc))}.`);
+    const r = getOfferRow(top, payload, req);
+    if (r.depDate && r.price != null) {
+      parts.push(`Hay recomendación fuera del rango: <strong>${escapeHTML(r.depDate)} → ${escapeHTML(r.retDate ?? "—")}</strong> ~ ${escapeHTML(fmtMoney(r.price, r.currency ?? currency))}.`);
     } else {
-      parts.push(`Hay recomendación fuera del rango, pero faltan datos de fecha/precio en el primer candidato.`);
+      parts.push(`Hay recomendación fuera del rango, pero faltan datos en el primer candidato.`);
     }
   } else if (req.enable_recommendations){
     parts.push(`No hubo fechas fuera de rango que mejoren claramente el resultado.`);
@@ -524,8 +474,8 @@ function buildExecutiveSummary(payload, req){
   return {
     html: parts.join(" "),
     pills: {
-      best: bestOffer ? `${fmtMoney(bestPrice, bestCur)}` : null,
-      range: `${centerOut} / ${centerRet} ±${range}`,
+      best: bestOffer ? `${fmtMoney(getOfferRow(bestOffer, payload, req).price, getOfferRow(bestOffer, payload, req).currency ?? currency)}` : null,
+      range: `${req.date_center} / ${req.return_center} ±${req.range_days}`,
       reco: req.enable_recommendations ? (recoHasOutOfRange ? "Reco: sí" : "Reco: no") : "Reco: off",
       recoWarn: req.enable_recommendations && recoHasOutOfRange
     }
@@ -577,6 +527,7 @@ function resetUI(){
   els.btnExport.disabled = true;
   lastResponse = null;
   lastOffers = null;
+  lastRequest = null;
 }
 
 function setPills(p){
@@ -608,22 +559,24 @@ function setPills(p){
 }
 
 function hydrateDefaults(){
+  // defaults (tu screenshot)
   document.getElementById("origin").value = "EZE";
-  document.getElementById("destination").value = "MAD";
+  document.getElementById("destination").value = "MIA";
   document.getElementById("date_center").value = "2026-02-10";
   document.getElementById("return_center").value = "2026-02-24";
   document.getElementById("range_days").value = "7";
   document.getElementById("currency").value = "USD";
-  document.getElementById("ranking_mode").value = "balanced";
+  document.getElementById("ranking_mode").value = "price";
 
   document.getElementById("enable_recommendations").checked = true;
-  document.getElementById("reco_horizon_days").value = "60";
-  document.getElementById("reco_top_k").value = "12";
+  document.getElementById("reco_horizon_days").value = "7";
+  document.getElementById("reco_top_k").value = "15";
   document.getElementById("enable_price_analysis").checked = true;
   document.getElementById("enable_choice_prediction").checked = true;
 
-  // ✅ filtros defaults
   clearFiltersToDefaults();
+  sortState = { key: "price", dir: "asc" };
+  updateSortIndicators();
 }
 
 function readFormPayload(){
@@ -671,6 +624,14 @@ function validatePayload(p){
   return errors;
 }
 
+function rerenderOffers(){
+  if (!lastOffers) return;
+  const filtered = applyClientFilters(lastOffers);
+  const sorted = sortOffersByColumn(filtered);
+  renderOffersTable(sorted);
+  updateSortIndicators();
+}
+
 async function handleSubmit(e){
   e.preventDefault();
   resetUI();
@@ -681,6 +642,8 @@ async function handleSubmit(e){
     setStatus("err", errs.join(" "));
     return;
   }
+
+  lastRequest = payload;
 
   const doTimeout = els.useTimeout.checked;
   const timeoutMs = doTimeout ? Number(els.timeoutMs.value || 30000) : null;
@@ -717,11 +680,9 @@ async function handleSubmit(e){
 
   const data = resp.data;
 
-  // store for export
   lastResponse = data;
   els.btnExport.disabled = false;
 
-  // render
   const offers = data.offers ?? [];
   const heatmap = data.heatmap ?? [];
   const extrema = data.extrema ?? null;
@@ -731,21 +692,16 @@ async function handleSubmit(e){
   els.execSummary.innerHTML = html;
   setPills(pills);
 
-  // ✅ populate airline selector from results (worker schema)
-  populateAirlineFilter(offers);
-
-  // table initial sort + filters
   lastOffers = offers;
+  populateAirlineFilter(offers);
   rerenderOffers();
 
   renderHeatmap(heatmap, payload.currency, extrema);
   renderRecommendations(recommendations, payload.currency);
 
-  // tech metrics panel
   const tech = {
     stats: data.stats ?? null,
     dedup_stats: data.dedup_stats ?? null,
-    meta: recommendations?.meta ?? recommendations?.flags ?? null,
   };
   els.techMetrics.textContent = JSON.stringify(tech, null, 2);
 
@@ -756,30 +712,39 @@ async function handleSubmit(e){
 function attachEvents(){
   els.form.addEventListener("submit", handleSubmit);
 
-  // ✅ sort respects filters
-  els.sortMode.addEventListener("change", () => {
-    rerenderOffers();
-  });
-
-  // ✅ filtros: aplicar/limpiar
-  els.btnApplyFilters?.addEventListener("click", () => {
-    rerenderOffers();
-  });
-
+  // filtros: aplicar/limpiar
+  els.btnApplyFilters?.addEventListener("click", () => rerenderOffers());
   els.btnClearFilters?.addEventListener("click", () => {
     clearFiltersToDefaults();
     rerenderOffers();
   });
 
-  // (opcional) auto-aplicar cuando cambia algo
+  // auto-aplicar
   els.filterAirline?.addEventListener("change", () => rerenderOffers());
   els.filterMaxStops?.addEventListener("input", () => rerenderOffers());
   els.filterMaxDuration?.addEventListener("input", () => rerenderOffers());
 
+  // header sort
+  document.querySelectorAll("#offersTable thead th[data-sort]").forEach(th => {
+    th.addEventListener("click", () => {
+      const key = th.getAttribute("data-sort");
+      if (!key) return;
+
+      if (sortState.key === key){
+        sortState.dir = (sortState.dir === "asc") ? "desc" : "asc";
+      } else {
+        sortState.key = key;
+        sortState.dir = "asc";
+      }
+      updateSortIndicators();
+      rerenderOffers();
+    });
+  });
+
   els.btnExport.addEventListener("click", () => {
     if (!lastResponse) return;
-    const payload = readFormPayload();
-    const fname = `amadeus_${payload.origin}_${payload.destination}_${payload.date_center}_${payload.return_center}.json`;
+    const p = readFormPayload();
+    const fname = `amadeus_${p.origin}_${p.destination}_${p.date_center}_${p.return_center}.json`;
     downloadJSON(lastResponse, fname);
   });
 
