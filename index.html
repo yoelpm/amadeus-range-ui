@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amadeus Flight Range Search</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <div class="brand">
+        <div class="logo">✈️</div>
+        <div>
+          <h1>Flight Range Search</h1>
+          <p class="muted">UI pública (Cloudflare Pages) → Worker existente</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btnExport" class="btn btn-secondary" disabled>Export JSON</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Consulta</h2>
+
+      <form id="searchForm" class="form-grid">
+        <div class="field">
+          <label for="origin">Origen</label>
+          <input id="origin" name="origin" type="text" inputmode="latin" maxlength="3" placeholder="EZE" required />
+          <div class="hint">IATA 3 letras</div>
+        </div>
+
+        <div class="field">
+          <label for="destination">Destino</label>
+          <input id="destination" name="destination" type="text" inputmode="latin" maxlength="3" placeholder="MAD" required />
+          <div class="hint">IATA 3 letras</div>
+        </div>
+
+        <div class="field">
+          <label for="date_center">Ida (centro)</label>
+          <input id="date_center" name="date_center" type="date" required />
+        </div>
+
+        <div class="field">
+          <label for="return_center">Vuelta (centro)</label>
+          <input id="return_center" name="return_center" type="date" required />
+        </div>
+
+        <div class="field">
+          <label for="range_days">Rango ± días</label>
+          <input id="range_days" name="range_days" type="number" min="0" max="30" step="1" required />
+          <div class="hint">Ej: 7 → busca ±7</div>
+        </div>
+
+        <div class="field">
+          <label for="currency">Moneda</label>
+          <select id="currency" name="currency">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="ARS">ARS</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="ranking_mode">Ranking mode</label>
+          <select id="ranking_mode" name="ranking_mode">
+            <option value="balanced">balanced</option>
+            <option value="price">price</option>
+            <option value="score">score</option>
+          </select>
+        </div>
+
+        <div class="field toggle">
+          <label class="checkbox">
+            <input id="enable_recommendations" name="enable_recommendations" type="checkbox" />
+            <span>Enable recommendations</span>
+          </label>
+          <div class="hint">Sugerir fechas fuera de rango</div>
+        </div>
+
+        <div class="field">
+          <label for="reco_horizon_days">Reco horizon (días)</label>
+          <input id="reco_horizon_days" name="reco_horizon_days" type="number" min="0" max="365" step="1" />
+        </div>
+
+        <div class="field">
+          <label for="reco_top_k">Reco top K</label>
+          <input id="reco_top_k" name="reco_top_k" type="number" min="1" max="50" step="1" />
+        </div>
+
+        <div class="field toggle">
+          <label class="checkbox">
+            <input id="enable_price_analysis" name="enable_price_analysis" type="checkbox" />
+            <span>Enable price analysis</span>
+          </label>
+        </div>
+
+        <div class="field toggle">
+          <label class="checkbox">
+            <input id="enable_choice_prediction" name="enable_choice_prediction" type="checkbox" />
+            <span>Enable choice prediction</span>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="btnSubmit" class="btn btn-primary" type="submit">Buscar</button>
+          <button id="btnReset" class="btn btn-secondary" type="button">Reset</button>
+
+          <div class="inline">
+            <label class="checkbox small">
+              <input id="use_timeout" type="checkbox" checked />
+              <span>Timeout</span>
+            </label>
+            <input id="timeout_ms" type="number" min="1000" max="180000" step="1000" value="30000" class="timeout-input" />
+            <span class="muted small">ms</span>
+          </div>
+        </div>
+      </form>
+
+      <div id="statusBar" class="status-bar hidden"></div>
+    </section>
+
+    <section id="results" class="results hidden">
+      <section class="card">
+        <div class="card-header">
+          <h2>Executive summary</h2>
+          <div class="pill-row">
+            <span id="pillBest" class="pill hidden"></span>
+            <span id="pillRange" class="pill hidden"></span>
+            <span id="pillReco" class="pill hidden"></span>
+          </div>
+        </div>
+        <div id="execSummary" class="exec-summary"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Ranking</h2>
+          <div class="controls">
+            <label class="muted small">Ordenar:</label>
+            <select id="sortMode" class="select">
+              <option value="price_asc">Precio ↑</option>
+              <option value="price_desc">Precio ↓</option>
+              <option value="score_desc">Score ↓</option>
+              <option value="score_asc">Score ↑</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table" id="offersTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Itinerario</th>
+                <th>Fechas</th>
+                <th class="right">Precio</th>
+                <th class="right">Score</th>
+                <th>Provider</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div id="offersEmpty" class="empty hidden">No se encontraron offers.</div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Heatmap</h2>
+          <div class="muted small">Grilla fecha → min_price (de <code>heatmap[]</code>)</div>
+        </div>
+        <div id="heatmapLegend" class="legend"></div>
+        <div id="heatmapGrid" class="heatmap"></div>
+        <div id="heatmapEmpty" class="empty hidden">No se encontró heatmap.</div>
+      </section>
+
+      <section class="card" id="recoCard">
+        <div class="card-header">
+          <h2>Fechas recomendadas fuera del rango</h2>
+          <div class="muted small">De <code>recommendations.cheapest_date_candidates[]</code></div>
+        </div>
+        <div id="recoList" class="reco-list"></div>
+        <div id="recoEmpty" class="empty hidden">No hay recomendaciones fuera de rango.</div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Métricas técnicas</h2>
+          <div class="muted small">stats (y dedup_stats si existe)</div>
+        </div>
+        <pre id="techMetrics" class="codeblock"></pre>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container muted small">
+      Consume: <code>POST https://amadeus-flight-proxy.yoelpm.workers.dev/search-range</code>
+    </div>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
