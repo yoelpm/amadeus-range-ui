@@ -292,23 +292,22 @@ th[data-sort].active.desc .sort-indicator::after{
   position: relative;
 }
 
+/* --- Autocomplete visual fix --- */
 .autocomplete-list {
-  position: absolute;
-  z-index: 999;
   background: #fff;
   border: 1px solid #ccc;
-  width: 100%;
-  max-height: 200px;
+  border-radius: 6px;
+  max-height: 250px;
   overflow-y: auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
 }
 
 .autocomplete-item {
-  padding: 6px 10px;
+  color: #000 !important;         /* 🔹 texto negro */
+  padding: 8px 10px;
   cursor: pointer;
 }
 
 .autocomplete-item:hover {
-  background: #f0f0f0;
+  background-color: #e9e9e9;      /* 🔹 gris claro al pasar el mouse */
 }
-
