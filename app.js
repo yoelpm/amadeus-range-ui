@@ -1,10 +1,9 @@
-// ✅ Versión final integrada de app.js (Amadeus Flight Finder)
-// Incluye: fallback offers, análisis Business, notas técnicas, hydrateDefaults, setPills y eventos
+// ✅ Versión final extendida de Amadeus Range UI
+// Incluye Executive Summary Pro + render completo + análisis técnico detallado
 
 console.log("✅ app.js cargado correctamente en", window.location.href);
 const ENDPOINT = "https://amadeus-flight-proxy.yoelpm.workers.dev/search-range";
 
-// --- Selección de elementos del DOM ---
 const els = {
   form: document.getElementById("searchForm"),
   statusBar: document.getElementById("statusBar"),
@@ -18,7 +17,6 @@ const els = {
   heatmapLegend: document.getElementById("heatmapLegend"),
   heatmapGrid: document.getElementById("heatmapGrid"),
   heatmapEmpty: document.getElementById("heatmapEmpty"),
-  recoCard: document.getElementById("recoCard"),
   recoList: document.getElementById("recoList"),
   recoEmpty: document.getElementById("recoEmpty"),
   techMetrics: document.getElementById("techMetrics"),
@@ -26,258 +24,209 @@ const els = {
   btnReset: document.getElementById("btnReset"),
   useTimeout: document.getElementById("use_timeout"),
   timeoutMs: document.getElementById("timeout_ms"),
-  filterAirline: document.getElementById("filter_airline"),
-  filterMaxStops: document.getElementById("filter_max_stops"),
-  filterMaxDuration: document.getElementById("filter_max_duration"),
-  btnApplyFilters: document.getElementById("btnApplyFilters"),
-  btnClearFilters: document.getElementById("btnClearFilters"),
 };
 
-let lastResponse = null;
-let lastOffers = null;
-let lastRequest = null;
+let lastResponse = null, lastOffers = null;
 
 // =====================
-// Utils básicos
+// Utilidades base
 // =====================
 function setStatus(type, msg) {
   els.statusBar.classList.remove("hidden", "ok", "err", "warn");
   els.statusBar.classList.add(type);
   els.statusBar.textContent = msg;
 }
-
-function showResults() {
-  els.results.classList.remove("hidden");
-}
-
+function showResults() { els.results.classList.remove("hidden"); }
 function resetUI() {
   els.results.classList.add("hidden");
   els.statusBar.textContent = "";
   els.statusBar.classList.add("hidden");
   els.statusBar.classList.remove("ok", "err", "warn");
 }
-
-function getDeep(obj, path, fallback = undefined) {
-  try {
-    return path.split(".").reduce((acc, k) => acc?.[k], obj) ?? fallback;
-  } catch {
-    return fallback;
-  }
+function fmtMoney(v, cur = "USD") {
+  const n = Number(v);
+  if (!isFinite(n)) return "—";
+  try { return new Intl.NumberFormat("en-US", { style: "currency", currency: cur }).format(n); }
+  catch { return `${n.toFixed(0)} ${cur}`; }
 }
-
-function fmtMoney(value, currency) {
-  if (value == null || Number.isNaN(Number(value))) return "—";
-  const n = Number(value);
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency }).format(n);
-  } catch {
-    return `${n.toFixed(0)} ${currency}`;
-  }
-}
-
-function safeDate(s) {
-  return s ? String(s) : "—";
-}
-
-function escapeHTML(s) {
-  return String(s ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+function escapeHTML(s) { return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+function safeDate(d) { return d ? d.slice(0, 10) : "—"; }
+function getDeep(o, p, f = null) {
+  try { return p.split(".").reduce((a, k) => a?.[k], o) ?? f; } catch { return f; }
 }
 
 // =====================
-// Actualiza los "pills" del resumen
-// =====================
-function setPills(pills = {}) {
-  const pillElems = {
-    best: els.pillBest,
-    range: els.pillRange,
-    reco: els.pillReco,
-  };
-
-  Object.entries(pillElems).forEach(([key, el]) => {
-    if (!el) return;
-    const val = pills[key];
-    if (val) {
-      el.textContent = val;
-      el.classList.remove("hidden");
-      if (pills.recoWarn && key === "reco") el.classList.add("warn");
-    } else {
-      el.classList.add("hidden");
-    }
-  });
-}
-
-// =====================
-// Networking principal modificado
+// Eventos principales
 // =====================
 async function postJSON(url, body, { timeoutMs } = {}) {
-  const controller = new AbortController();
-  const t = timeoutMs ? setTimeout(() => controller.abort(), timeoutMs) : null;
+  const ctrl = new AbortController();
+  const t = timeoutMs ? setTimeout(() => ctrl.abort(), timeoutMs) : null;
   try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-      signal: controller.signal,
-    });
-    const data = await res.json().catch(() => null);
-    return { ok: res.ok, status: res.status, data };
-  } finally {
-    if (t) clearTimeout(t);
-  }
+    const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: ctrl.signal });
+    const data = await r.json().catch(() => null);
+    return { ok: r.ok, status: r.status, data };
+  } finally { if (t) clearTimeout(t); }
 }
 
 async function handleSubmit(e) {
   e.preventDefault();
   resetUI();
-
   const payload = readFormPayload();
   const errs = validatePayload(payload);
-  if (errs.length) {
-    setStatus("err", errs.join(" "));
-    return;
-  }
-
-  lastRequest = payload;
-  const doTimeout = els.useTimeout?.checked;
-  const timeoutMs = doTimeout ? Number(els.timeoutMs?.value || 30000) : null;
+  if (errs.length) return setStatus("err", errs.join(" "));
 
   setStatus("warn", `Consultando… (${ENDPOINT})`);
+  const resp = await postJSON(ENDPOINT, payload, { timeoutMs: 45000 }).catch(err => ({ ok: false, status: 0, data: { message: err.message } }));
 
-  let resp;
-  try {
-    resp = await postJSON(ENDPOINT, payload, { timeoutMs });
-  } catch (err) {
-    setStatus("err", `Error: ${err.message}`);
-    return;
-  }
-
-  if (!resp || !resp.ok || !resp.data) {
-    setStatus("err", `HTTP ${resp?.status || "?"}. Error o respuesta vacía.`);
-    return;
-  }
+  if (!resp.ok || !resp.data) return setStatus("err", `HTTP ${resp.status}: ${resp.data?.message ?? "Error desconocido"}`);
 
   const data = resp.data;
   lastResponse = data;
+  lastOffers = Array.isArray(data.offers) ? data.offers : [];
   els.btnExport.disabled = false;
 
-  const offers = Array.isArray(data.offers) ? data.offers : [];
-  if (!offers.length && data.dedup_stats?.raw_offers > 0) {
-    console.warn("⚠️ Offers vacíos pero dedup_stats indica data. Forzando fallback.");
-    if (Array.isArray(data.heatmap) && data.heatmap.length) {
-      offers.push({
-        airline: data.heatmap[0].airline ?? "—",
-        total_price: data.heatmap[0].min_price,
-        currency: data.heatmap[0].currency ?? "USD",
-        departure_date: data.heatmap[0].date,
-        return_date: data.heatmap[0].date,
-        cabin: "ECONOMY",
-        stops_total: data.heatmap[0].stops_total ?? 2,
-      });
-    }
-  }
-
-  const heatmap = Array.isArray(data.heatmap) ? data.heatmap : [];
-  const extrema = data.extrema ?? null;
-  const recommendations = data.recommendations ?? null;
-
-  const { html, pills } = buildExecutiveSummary(data, payload);
+  const { html, pills } = buildExecutiveSummaryPro(data, payload);
   els.execSummary.innerHTML = html;
   setPills(pills);
 
-  lastOffers = offers;
-
-  const flags = [];
-  if (data.recommendations?.price_analysis === null)
-    flags.push("⚠️ Price analysis no disponible (timeout o rate limit)");
-  if (data.recommendations?.choice_prediction_applied === false)
-    flags.push("⚠️ Choice prediction no ejecutado");
-
-  const tech = {
-    stats: data.stats ?? {},
-    dedup_stats: data.dedup_stats ?? {},
-    notes: flags,
-  };
-  els.techMetrics.textContent = JSON.stringify(tech, null, 2);
+  rerenderOffers();
+  renderHeatmap(data.heatmap, payload.currency);
+  renderRecommendations(data.recommendations, payload.currency);
+  renderTechNotes(data);
 
   showResults();
-  setStatus("ok", `OK. Offers: ${offers.length} • Heatmap: ${heatmap.length}`);
+  setStatus("ok", `OK. Offers: ${lastOffers.length} • Heatmap: ${data.heatmap?.length ?? 0}`);
 }
 
 // =====================
-// Executive Summary modificado
+// Executive Summary Pro
 // =====================
-function buildExecutiveSummary(payload, req) {
-  const currency = req.currency ?? "USD";
-  const offers = payload?.offers ?? [];
-  const bestOffer = offers.length
-    ? offers.reduce((best, cur) => {
-        const pb = Number(best?.total_price ?? best?.price ?? Infinity);
-        const pc = Number(cur?.total_price ?? cur?.price ?? Infinity);
-        return pc < pb ? cur : best;
-      }, offers[0])
-    : null;
+function buildExecutiveSummaryPro(data, req) {
+  const offers = data.offers ?? [];
+  const dedup = data.dedup_stats?.deduped_offers ?? offers.length;
+  const raw = data.dedup_stats?.raw_offers ?? "—";
 
-  const extrema = payload?.extrema ?? null;
-  const cheapest = getDeep(extrema, "cheapest", null);
-  const priciest = getDeep(extrema, "priciest", null);
-  const reco = payload?.recommendations ?? null;
-  const recoCandidates = reco?.cheapest_date_candidates ?? [];
-  const recoHasOutOfRange = recoCandidates.length > 0;
+  const best = offers[0];
+  const cheapest = getDeep(data, "extrema.cheapest");
+  const priciest = getDeep(data, "extrema.priciest");
+
+  const econOffers = offers.filter(o => (o.cabin ?? "").includes("ECONOMY"));
+  const bizOffers = offers.filter(o => (o.cabin ?? "").includes("BUSINESS"));
+  const bestEcon = econOffers.length ? Math.min(...econOffers.map(o => o.total_price)) : null;
+  const bestBiz = bizOffers.length ? Math.min(...bizOffers.map(o => o.total_price)) : null;
 
   const parts = [];
-  if (bestOffer) {
-    parts.push(`Mejor oferta encontrada: <strong>${escapeHTML(fmtMoney(bestOffer.total_price, bestOffer.currency ?? currency))}</strong>.`);
-  } else {
-    parts.push(`No se encontraron ofertas para la consulta.`);
+
+  parts.push(`<h3>🧭 Resumen ejecutivo</h3>
+  <p>Ruta: <strong>${req.origin} → ${req.destination}</strong>, ida ${safeDate(req.date_center)}, vuelta ${safeDate(req.return_center)}.</p>
+  <p>Se encontraron ${dedup} ofertas deduplicadas (${raw} brutas).</p>`);
+
+  if (best) parts.push(`<p>Mejor oferta: ${fmtMoney(best.total_price, best.currency)} (${best.airline ?? "—"} / ${best.cabin ?? "—"} / ${best.stops_total ?? 0} escalas).</p>`);
+
+  if (bestEcon && bestBiz) {
+    const ratio = bestBiz / bestEcon;
+    const tag = ratio <= 1.3 ? "✅ comparable" : "❌ premium";
+    parts.push(`<p>Clase Business desde ${fmtMoney(bestBiz, req.currency)} (${(ratio).toFixed(1)}× economy) ${tag}.</p>`);
   }
 
-  if (cheapest?.date && (cheapest?.min_price != null || cheapest?.price != null)) {
-    const chPrice = cheapest?.min_price ?? cheapest?.price;
-    parts.push(`Cheapest: <strong>${escapeHTML(safeDate(String(cheapest.date).slice(0, 10)))}</strong> @ ${escapeHTML(fmtMoney(chPrice, cheapest.currency ?? currency))}.`);
-  }
-  if (priciest?.date && (priciest?.min_price != null || priciest?.price != null)) {
-    const prPrice = priciest?.min_price ?? priciest?.price;
-    parts.push(`Priciest: ${escapeHTML(safeDate(String(priciest.date).slice(0, 10)))} @ ${escapeHTML(fmtMoney(prPrice, priciest.currency ?? currency))}.`);
-  }
+  if (cheapest?.date && cheapest?.min_price)
+    parts.push(`<p>Más barato: ${safeDate(cheapest.date)} → ${fmtMoney(cheapest.min_price, cheapest.currency ?? req.currency)}.</p>`);
+  if (priciest?.date && priciest?.min_price)
+    parts.push(`<p>Más caro: ${safeDate(priciest.date)} → ${fmtMoney(priciest.min_price, priciest.currency ?? req.currency)}.</p>`);
 
-  if (recoHasOutOfRange) {
-    const top = recoCandidates[0] ?? null;
-    if (top?.departure_date && top?.total_price != null) {
-      parts.push(`Hay recomendación fuera del rango: <strong>${escapeHTML(top.departure_date)} → ${escapeHTML(top.return_date ?? "—")}</strong> ~ ${escapeHTML(fmtMoney(top.total_price, top.currency ?? currency))}.`);
-    } else {
-      parts.push(`Hay recomendación fuera del rango, pero faltan datos en el primer candidato.`);
-    }
-  }
-
-  const econOffers = offers.filter(o => (o.cabin ?? "").toUpperCase().includes("ECONOMY"));
-  const bizOffers = offers.filter(o => (o.cabin ?? "").toUpperCase().includes("BUSINESS"));
-  if (econOffers.length && bizOffers.length) {
-    const bestEcon = Math.min(...econOffers.map(o => Number(o.total_price ?? o.price ?? Infinity)));
-    const bestBiz = bizOffers.map(o => Number(o.total_price ?? o.price ?? Infinity)).filter(p => p <= bestEcon * 1.3);
-    if (bestBiz.length) {
-      const minBiz = Math.min(...bestBiz);
-      parts.push(`Clase Business comparable disponible desde ${fmtMoney(minBiz, currency)} (≤30% sobre Economy).`);
-    }
-  }
+  if (data.recommendations?.cheapest_date_candidates?.length)
+    parts.push(`<p>🌐 Fechas fuera de rango disponibles (${data.recommendations.cheapest_date_candidates.length}).</p>`);
 
   return {
-    html: parts.join(" "),
+    html: `<div class="summary-pro">${parts.join("")}</div>`,
     pills: {
-      best: bestOffer ? `${fmtMoney(bestOffer.total_price, bestOffer.currency ?? currency)}` : null,
+      best: best ? fmtMoney(best.total_price, best.currency) : "—",
       range: `${req.date_center} / ${req.return_center} ±${req.range_days}`,
-      reco: req.enable_recommendations ? (recoHasOutOfRange ? "Reco: sí" : "Reco: no") : "Reco: off",
-      recoWarn: req.enable_recommendations && recoHasOutOfRange,
+      reco: data.recommendations?.cheapest_date_candidates?.length ? "Reco: sí" : "Reco: no",
     },
   };
 }
 
 // =====================
-// Funciones auxiliares para el form
+// Render UI
+// =====================
+function rerenderOffers() {
+  const tb = els.offersTableBody;
+  if (!tb) return;
+  tb.innerHTML = "";
+  if (!lastOffers?.length) return els.offersEmpty.classList.remove("hidden");
+  els.offersEmpty.classList.add("hidden");
+  lastOffers.slice(0, 10).forEach((o, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="right">${fmtMoney(o.total_price, o.currency)}</td>
+      <td>${escapeHTML(o.airline ?? "—")}</td>
+      <td>${safeDate(o.departure_date)}</td>
+      <td>${safeDate(o.return_date)}</td>
+      <td class="right">${o.stops_total ?? 0}</td>
+      <td class="right">${escapeHTML(o.duration_out ?? "—")}</td>
+      <td class="right">${o.score ?? "—"}</td>
+      <td>${o.link ? `<a href="${o.link}" target="_blank">🔗</a>` : "—"}</td>`;
+    tb.appendChild(tr);
+  });
+}
+function renderHeatmap(h, cur) {
+  els.heatmapGrid.innerHTML = "";
+  els.heatmapLegend.innerHTML = "";
+  if (!h?.length) return els.heatmapEmpty.classList.remove("hidden");
+  els.heatmapEmpty.classList.add("hidden");
+
+  const prices = h.map(x => x.min_price);
+  const min = Math.min(...prices), max = Math.max(...prices);
+  const grid = document.createElement("div");
+  grid.classList.add("heatmap-grid-inner");
+
+  h.forEach(x => {
+    const ratio = (x.min_price - min) / (max - min);
+    const color = `hsl(${120 - ratio * 120}, 60%, 45%)`;
+    const cell = document.createElement("div");
+    cell.classList.add("heatmap-cell");
+    cell.style.backgroundColor = color;
+    cell.title = `${safeDate(x.date)} → ${fmtMoney(x.min_price, cur)}`;
+    grid.appendChild(cell);
+  });
+
+  els.heatmapGrid.appendChild(grid);
+  els.heatmapLegend.innerHTML = `<span>${fmtMoney(min, cur)}</span> → <span>${fmtMoney(max, cur)}</span>`;
+}
+function renderRecommendations(r, cur) {
+  els.recoList.innerHTML = "";
+  if (!r?.cheapest_date_candidates?.length) return els.recoEmpty.classList.remove("hidden");
+  els.recoEmpty.classList.add("hidden");
+
+  r.cheapest_date_candidates.slice(0, 5).forEach(x => {
+    const div = document.createElement("div");
+    div.classList.add("reco-item");
+    div.innerHTML = `<strong>${safeDate(x.departure_date)} → ${safeDate(x.return_date)}</strong> ${fmtMoney(x.total_price, x.currency ?? cur)} <span class="tag">fuera de rango</span>`;
+    els.recoList.appendChild(div);
+  });
+}
+function renderTechNotes(d) {
+  const s = d.stats ?? {}, ds = d.dedup_stats ?? {};
+  const lines = [];
+  lines.push(`raw_offers: ${ds.raw_offers ?? "?"} | deduped: ${ds.deduped_offers ?? "?"}`);
+  lines.push(`completadas: ${s.completed ?? "?"} / ${s.started ?? "?"} | fallidas: ${s.failed ?? 0}`);
+  lines.push(`deadline: ${s.hard_deadline_ms ?? "?"} ms | timeout por request: ${s.per_call_timeout_ms ?? "?"} ms`);
+  if (d.recommendations?.price_analysis === null) lines.push("⚠️ Price analysis: null (timeout probable)");
+  if (d.recommendations?.choice_prediction_applied === false) lines.push("⚠️ Choice prediction: no aplicado");
+  els.techMetrics.textContent = lines.join("\n");
+}
+function setPills(p) {
+  const pill = { best: els.pillBest, range: els.pillRange, reco: els.pillReco };
+  Object.entries(pill).forEach(([k, el]) => {
+    const v = p[k];
+    if (v) { el.textContent = v; el.classList.remove("hidden"); }
+    else el.classList.add("hidden");
+  });
+}
+
+// =====================
+// Form helpers
 // =====================
 function readFormPayload() {
   return {
@@ -289,44 +238,33 @@ function readFormPayload() {
     currency: document.getElementById("currency").value,
     ranking_mode: document.getElementById("ranking_mode").value,
     enable_recommendations: document.getElementById("enable_recommendations")?.checked ?? true,
-    reco_horizon_days: Number(document.getElementById("reco_horizon_days")?.value || 7),
-    reco_top_k: Number(document.getElementById("reco_top_k")?.value || 15),
-    enable_price_analysis: document.getElementById("enable_price_analysis")?.checked ?? true,
-    enable_choice_prediction: document.getElementById("enable_choice_prediction")?.checked ?? true,
+    reco_horizon_days: 7, reco_top_k: 15,
+    enable_price_analysis: true, enable_choice_prediction: true,
   };
 }
-
 function validatePayload(p) {
-  const errors = [];
-  if (!/^[A-Z]{3}$/.test(p.origin)) errors.push("Origen inválido (IATA 3 letras).");
-  if (!/^[A-Z]{3}$/.test(p.destination)) errors.push("Destino inválido (IATA 3 letras).");
-  if (!p.date_center) errors.push("Ida requerida.");
-  if (!p.return_center) errors.push("Vuelta requerida.");
-  return errors;
+  const e = [];
+  if (!/^[A-Z]{3}$/.test(p.origin)) e.push("Origen inválido.");
+  if (!/^[A-Z]{3}$/.test(p.destination)) e.push("Destino inválido.");
+  if (!p.date_center) e.push("Fecha ida requerida.");
+  if (!p.return_center) e.push("Fecha vuelta requerida.");
+  return e;
 }
-
-// =====================
-// Defaults e init global
-// =====================
 function hydrateDefaults() {
   document.getElementById("origin").value = "EZE";
-  document.getElementById("destination").value = "MIA";
-  document.getElementById("date_center").value = "2026-02-10";
-  document.getElementById("return_center").value = "2026-02-24";
-  document.getElementById("range_days").value = "7";
-  document.getElementById("currency").value = "USD";
-  document.getElementById("ranking_mode").value = "price";
-  console.log("✅ hydrateDefaults aplicado");
+  document.getElementById("destination").value = "CDG";
+  document.getElementById("date_center").value = "2026-07-03";
+  document.getElementById("return_center").value = "2026-07-14";
+  document.getElementById("range_days").value = 7;
 }
-
 function attachEvents() {
   els.form.addEventListener("submit", handleSubmit);
-  els.btnReset?.addEventListener("click", hydrateDefaults);
+  els.btnReset.addEventListener("click", hydrateDefaults);
   console.log("✅ Eventos conectados");
 }
 
 // =====================
-// Inicialización
+// Init
 // =====================
 hydrateDefaults();
 attachEvents();
