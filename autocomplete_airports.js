@@ -1,9 +1,6 @@
 // =====================
-// autocomplete-airports.js
+// Autocompletado simple sin dependencias
 // =====================
-// Autocompletado simple sin dependencias externas
-// Usa airports.json (colocado en la misma carpeta)
-
 async function initAirportAutocomplete() {
   const response = await fetch('./airports.json');
   const airports = await response.json();
@@ -27,15 +24,15 @@ async function initAirportAutocomplete() {
 
       const filtered = airports.filter(a =>
         a.iata.toLowerCase().includes(val) ||
-        a.city.toLowerCase().includes(val) ||
-        a.name.toLowerCase().includes(val) ||
-        a.country.toLowerCase().includes(val)
+        a.ciudad.toLowerCase().includes(val) ||
+        a.nombre.toLowerCase().includes(val) ||
+        a.pais.toLowerCase().includes(val)
       ).slice(0, 10);
 
       filtered.forEach(a => {
         const item = document.createElement('div');
         item.classList.add('autocomplete-item');
-        item.textContent = `${a.iata} — ${a.city} (${a.name}, ${a.country})`;
+        item.textContent = `${a.iata} — ${a.ciudad} (${a.nombre}, ${a.pais})`;
         item.addEventListener('click', () => {
           input.value = a.iata;
           list.innerHTML = '';
