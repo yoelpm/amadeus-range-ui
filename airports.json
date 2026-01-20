@@ -1,0 +1,22 @@
+[
+  {"iata": "EZE", "ciudad": "Buenos Aires", "nombre": "Ministro Pistarini", "pais": "Argentina"},
+  {"iata": "AEP", "ciudad": "Buenos Aires", "nombre": "Aeroparque Jorge Newbery", "pais": "Argentina"},
+  {"iata": "COR", "ciudad": "Córdoba", "nombre": "Ingeniero Taravella", "pais": "Argentina"},
+  {"iata": "MIA", "ciudad": "Miami", "nombre": "Aeropuerto Internacional de Miami", "pais": "Estados Unidos"},
+  {"iata": "JFK", "ciudad": "Nueva York", "nombre": "John F. Kennedy", "pais": "Estados Unidos"},
+  {"iata": "MAD", "ciudad": "Madrid", "nombre": "Adolfo Suárez Madrid-Barajas", "pais": "España"},
+  {"iata": "BCN", "ciudad": "Barcelona", "nombre": "El Prat", "pais": "España"},
+  {"iata": "CDG", "ciudad": "París", "nombre": "Charles de Gaulle", "pais": "Francia"},
+  {"iata": "FCO", "ciudad": "Roma", "nombre": "Fiumicino Leonardo da Vinci", "pais": "Italia"},
+  {"iata": "GRU", "ciudad": "São Paulo", "nombre": "Guarulhos", "pais": "Brasil"},
+  {"iata": "SCL", "ciudad": "Santiago de Chile", "nombre": "Arturo Merino Benítez", "pais": "Chile"},
+  {"iata": "MEX", "ciudad": "Ciudad de México", "nombre": "Benito Juárez", "pais": "México"},
+  {"iata": "CUN", "ciudad": "Cancún", "nombre": "Internacional de Cancún", "pais": "México"},
+  {"iata": "LHR", "ciudad": "Londres", "nombre": "Heathrow", "pais": "Reino Unido"},
+  {"iata": "AMS", "ciudad": "Ámsterdam", "nombre": "Schiphol", "pais": "Países Bajos"},
+  {"iata": "FRA", "ciudad": "Fráncfort", "nombre": "Frankfurt am Main", "pais": "Alemania"},
+  {"iata": "IST", "ciudad": "Estambul", "nombre": "Istanbul Airport", "pais": "Turquía"},
+  {"iata": "DXB", "ciudad": "Dubái", "nombre": "Dubai International", "pais": "Emiratos Árabes Unidos"},
+  {"iata": "HND", "ciudad": "Tokio", "nombre": "Haneda", "pais": "Japón"},
+  {"iata": "SYD", "ciudad": "Sídney", "nombre": "Kingsford Smith", "pais": "Australia"}
+]
