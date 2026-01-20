@@ -8,6 +8,34 @@
 // --- Inicio ---
 console.log("✅ app.js cargado correctamente en", window.location.href);
 const ENDPOINT = "https://amadeus-flight-proxy.yoelpm.workers.dev/search-range";
+// --- Selección de elementos del DOM ---
+const els = {
+  form: document.getElementById("searchForm"),
+  statusBar: document.getElementById("statusBar"),
+  results: document.getElementById("results"),
+  execSummary: document.getElementById("execSummary"),
+  pillBest: document.getElementById("pillBest"),
+  pillRange: document.getElementById("pillRange"),
+  pillReco: document.getElementById("pillReco"),
+  offersTableBody: document.querySelector("#offersTable tbody"),
+  offersEmpty: document.getElementById("offersEmpty"),
+  heatmapLegend: document.getElementById("heatmapLegend"),
+  heatmapGrid: document.getElementById("heatmapGrid"),
+  heatmapEmpty: document.getElementById("heatmapEmpty"),
+  recoCard: document.getElementById("recoCard"),
+  recoList: document.getElementById("recoList"),
+  recoEmpty: document.getElementById("recoEmpty"),
+  techMetrics: document.getElementById("techMetrics"),
+  btnExport: document.getElementById("btnExport"),
+  btnReset: document.getElementById("btnReset"),
+  useTimeout: document.getElementById("use_timeout"),
+  timeoutMs: document.getElementById("timeout_ms"),
+  filterAirline: document.getElementById("filter_airline"),
+  filterMaxStops: document.getElementById("filter_max_stops"),
+  filterMaxDuration: document.getElementById("filter_max_duration"),
+  btnApplyFilters: document.getElementById("btnApplyFilters"),
+  btnClearFilters: document.getElementById("btnClearFilters"),
+};
 
 // ... (todas tus declaraciones y funciones previas se mantienen igual)
 
@@ -191,5 +219,10 @@ function buildExecutiveSummary(payload, req){
     }
   };
 }
-
+// =====================
+// Inicialización global
+// =====================
+hydrateDefaults();
+attachEvents();
+setStatus("ok", "Listo. Configurá y ejecutá una búsqueda.");
 // --- Fin ---
