@@ -6,7 +6,7 @@
 // 4. Notas técnicas en Tech Metrics
 
 // --- Inicio ---
-
+console.log("✅ app.js cargado correctamente en", window.location.href);
 const ENDPOINT = "https://amadeus-flight-proxy.yoelpm.workers.dev/search-range";
 
 // ... (todas tus declaraciones y funciones previas se mantienen igual)
