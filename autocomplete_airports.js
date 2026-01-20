@@ -73,3 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
     console.warn("Flatpickr no está disponible.");
   }
 });
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initAirportAutocomplete);
+} else {
+  initAirportAutocomplete();
+}
