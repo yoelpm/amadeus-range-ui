@@ -4,6 +4,28 @@
 console.log("✅ app.js cargado correctamente en", window.location.href);
 const ENDPOINT = "https://amadeus-flight-proxy.yoelpm.workers.dev/search-range";
 
+// =====================
+// Diccionario de aerolíneas (cargado dinámicamente desde airlines.json)
+// =====================
+let AIRLINE_DICT = {};
+
+async function loadAirlines() {
+  try {
+    const res = await fetch("./airlines.json");
+    if (!res.ok) throw new Error("Error al cargar airlines.json");
+    AIRLINE_DICT = await res.json();
+    console.log("✅ Aerolíneas cargadas:", Object.keys(AIRLINE_DICT).length);
+  } catch (err) {
+    console.warn("⚠️ No se pudieron cargar las aerolíneas:", err.message);
+    AIRLINE_DICT = {};
+  }
+}
+
+function getAirlineName(code) {
+  return AIRLINE_DICT[code?.toUpperCase()] ?? code ?? "—";
+}
+
+
 const els = {
   form: document.getElementById("searchForm"),
   statusBar: document.getElementById("statusBar"),
@@ -326,6 +348,10 @@ function attachEvents() {
 // =====================
 // Init
 // =====================
-hydrateDefaults();
-attachEvents();
-setStatus("ok", "Listo. Configurá y ejecutá una búsqueda.");
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadAirlines(); // carga el diccionario
+  hydrateDefaults();
+  attachEvents();
+  setStatus("ok", "Listo. Configurá y ejecutá una búsqueda.");
+});
+
