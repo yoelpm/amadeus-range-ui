@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Amadeus Flight Range Search</title>
   <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
   <header class="site-header">
@@ -16,7 +17,6 @@
           <p class="muted">UI pública (Cloudflare Pages) → Worker existente</p>
         </div>
       </div>
-
       <div class="header-actions">
         <button id="btnExport" class="btn btn-secondary" disabled>Export JSON</button>
       </div>
@@ -26,33 +26,32 @@
   <main class="container">
     <section class="card">
       <h2>Consulta</h2>
-
       <form id="searchForm" class="form-grid">
         <div class="field">
           <label for="origin">Origen</label>
-          <input id="origin" name="origin" type="text" inputmode="latin" maxlength="3" placeholder="EZE" required />
-          <div class="hint">IATA 3 letras</div>
+          <input id="origin" name="origin" type="text" placeholder="Buscar aeropuerto..." required />
+          <div class="hint">Escriba ciudad, país o código IATA</div>
         </div>
 
         <div class="field">
           <label for="destination">Destino</label>
-          <input id="destination" name="destination" type="text" inputmode="latin" maxlength="3" placeholder="MIA" required />
-          <div class="hint">IATA 3 letras</div>
+          <input id="destination" name="destination" type="text" placeholder="Buscar aeropuerto..." required />
+          <div class="hint">Escriba ciudad, país o código IATA</div>
         </div>
 
         <div class="field">
           <label for="date_center">Ida (centro)</label>
-          <input id="date_center" name="date_center" type="date" required />
+          <input id="date_center" name="date_center" type="text" placeholder="Seleccione fecha" required />
         </div>
 
         <div class="field">
           <label for="return_center">Vuelta (centro)</label>
-          <input id="return_center" name="return_center" type="date" required />
+          <input id="return_center" name="return_center" type="text" placeholder="Seleccione fecha" required />
         </div>
 
         <div class="field">
           <label for="range_days">Rango ± días</label>
-          <input id="range_days" name="range_days" type="number" min="0" max="30" step="1" required />
+          <input id="range_days" name="range_days" type="number" min="0" max="30" step="1" value="7" required />
           <div class="hint">Ej: 7 → busca ±7</div>
         </div>
 
@@ -74,80 +73,11 @@
           </select>
         </div>
 
-        <div class="field toggle">
-          <label class="checkbox">
-            <input id="enable_recommendations" name="enable_recommendations" type="checkbox" />
-            <span>Enable recommendations</span>
-          </label>
-          <div class="hint">Sugerir fechas fuera de rango</div>
-        </div>
-
-        <div class="field">
-          <label for="reco_horizon_days">Reco horizon (días)</label>
-          <input id="reco_horizon_days" name="reco_horizon_days" type="number" min="0" max="365" step="1" />
-        </div>
-
-        <div class="field">
-          <label for="reco_top_k">Reco top K</label>
-          <input id="reco_top_k" name="reco_top_k" type="number" min="1" max="50" step="1" />
-        </div>
-
-        <div class="field toggle">
-          <label class="checkbox">
-            <input id="enable_price_analysis" name="enable_price_analysis" type="checkbox" />
-            <span>Enable price analysis</span>
-          </label>
-        </div>
-
-        <div class="field toggle">
-          <label class="checkbox">
-            <input id="enable_choice_prediction" name="enable_choice_prediction" type="checkbox" />
-            <span>Enable choice prediction</span>
-          </label>
-        </div>
-
         <div class="actions">
           <button id="btnSubmit" class="btn btn-primary" type="submit">Buscar</button>
           <button id="btnReset" class="btn btn-secondary" type="button">Reset</button>
-
-          <div class="inline">
-            <label class="checkbox small">
-              <input id="use_timeout" type="checkbox" checked />
-              <span>Timeout</span>
-            </label>
-            <input id="timeout_ms" type="number" min="1000" max="180000" step="1000" value="120000" class="timeout-input" />
-            <span class="muted small">ms</span>
-          </div>
         </div>
       </form>
-
-      <div class="filters">
-        <div class="field">
-          <label for="filter_airline">Filtrar aerolínea</label>
-          <select id="filter_airline">
-            <option value="">Todas</option>
-          </select>
-          <div class="hint">Se llena automáticamente con las aerolíneas del resultado</div>
-        </div>
-
-        <div class="field">
-          <label for="filter_max_stops">Escalas máximas (total)</label>
-          <input id="filter_max_stops" type="number" min="0" max="6" step="1" value="2" />
-          <div class="hint">0 = directo</div>
-        </div>
-
-        <div class="field">
-          <label for="filter_max_duration">Duración máxima total (horas)</label>
-          <input id="filter_max_duration" type="number" min="1" max="60" step="1" value="40" />
-          <div class="hint">Suma ida + vuelta si están disponibles</div>
-        </div>
-
-        <div class="actions">
-          <button id="btnApplyFilters" class="btn btn-secondary" type="button">Aplicar filtros</button>
-          <button id="btnClearFilters" class="btn btn-secondary" type="button">Limpiar filtros</button>
-        </div>
-      </div>
-
       <div id="statusBar" class="status-bar hidden"></div>
     </section>
 
@@ -169,53 +99,50 @@
           <h2>Ranking</h2>
           <div class="muted small">Click en headers para ordenar (↑↓)</div>
         </div>
-
         <div class="table-wrap">
           <table class="table" id="offersTable">
             <thead>
               <tr>
-                <th data-sort="price" class="sortable right">Precio <span class="sort-indicator"></span></th>
-                <th data-sort="airline" class="sortable">Aerolínea <span class="sort-indicator"></span></th>
-                <th data-sort="dep_date" class="sortable">Salida <span class="sort-indicator"></span></th>
-                <th data-sort="ret_date" class="sortable">Regreso <span class="sort-indicator"></span></th>
-                <th data-sort="stops_total" class="sortable right">Escalas <span class="sort-indicator"></span></th>
-                <th data-sort="duration_total" class="sortable right">Duración <span class="sort-indicator"></span></th>
-                <th data-sort="score" class="sortable right">Score <span class="sort-indicator"></span></th>
+                <th data-sort="price" class="sortable right">Precio</th>
+                <th data-sort="airline" class="sortable">Aerolínea</th>
+                <th data-sort="dep_date" class="sortable">Salida</th>
+                <th data-sort="ret_date" class="sortable">Regreso</th>
+                <th data-sort="stops_total" class="sortable right">Escalas</th>
+                <th data-sort="duration_total" class="sortable right">Duración</th>
+                <th data-sort="score" class="sortable right">Score</th>
                 <th>Link</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
-
         <div id="offersEmpty" class="empty hidden">No se encontraron offers.</div>
       </section>
 
       <section class="card">
         <div class="card-header">
-          <h2>Heatmap</h2>
-          <div class="muted small">Grilla fecha → min_price (de <code>heatmap[]</code>)</div>
+          <h2>Heatmap de precios</h2>
         </div>
-        <div id="heatmapLegend" class="legend"></div>
-        <div id="heatmapGrid" class="heatmap"></div>
-        <div id="heatmapEmpty" class="empty hidden">No se encontró heatmap.</div>
-      </section>
-
-      <section class="card" id="recoCard">
-        <div class="card-header">
-          <h2>Fechas recomendadas fuera del rango</h2>
-          <div class="muted small">De <code>recommendations.cheapest_date_candidates[]</code></div>
-        </div>
-        <div id="recoList" class="reco-list"></div>
-        <div id="recoEmpty" class="empty hidden">No hay recomendaciones fuera de rango.</div>
+        <div id="heatmapLegend" class="heatmap-legend"></div>
+        <div id="heatmapGrid" class="heatmap-grid"></div>
+        <div id="heatmapEmpty" class="empty hidden">No se encontraron datos para el heatmap.</div>
       </section>
 
       <section class="card">
         <div class="card-header">
-          <h2>Métricas técnicas</h2>
-          <div class="muted small">stats (y dedup_stats si existe)</div>
+          <h2>Recomendaciones fuera del rango</h2>
         </div>
-        <pre id="techMetrics" class="codeblock"></pre>
+        <div id="recoCard">
+          <div id="recoList"></div>
+          <div id="recoEmpty" class="empty hidden">No hay recomendaciones adicionales.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Notas técnicas</h2>
+        </div>
+        <pre id="techMetrics" class="tech"></pre>
       </section>
     </section>
   </main>
@@ -226,6 +153,9 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+  <script src="./autocomplete-airports.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>
