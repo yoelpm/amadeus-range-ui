@@ -69,5 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       locale: 'es',
       allowInput: true
     });
+  } else {
+    console.warn("Flatpickr no está disponible.");
   }
 });
