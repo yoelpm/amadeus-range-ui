@@ -1,5 +1,5 @@
 // ✅ Versión final integrada de app.js (Amadeus Flight Finder)
-// Incluye: Fallback offers, render robusto heatmap, análisis Business, notas técnicas, init completo
+// Incluye: fallback offers, análisis Business, notas técnicas, hydrateDefaults, setPills y eventos
 
 console.log("✅ app.js cargado correctamente en", window.location.href);
 const ENDPOINT = "https://amadeus-flight-proxy.yoelpm.workers.dev/search-range";
@@ -86,6 +86,29 @@ function escapeHTML(s) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+// =====================
+// Actualiza los "pills" del resumen
+// =====================
+function setPills(pills = {}) {
+  const pillElems = {
+    best: els.pillBest,
+    range: els.pillRange,
+    reco: els.pillReco,
+  };
+
+  Object.entries(pillElems).forEach(([key, el]) => {
+    if (!el) return;
+    const val = pills[key];
+    if (val) {
+      el.textContent = val;
+      el.classList.remove("hidden");
+      if (pills.recoWarn && key === "reco") el.classList.add("warn");
+    } else {
+      el.classList.add("hidden");
+    }
+  });
 }
 
 // =====================
@@ -283,7 +306,7 @@ function validatePayload(p) {
 }
 
 // =====================
-// Defaults de formulario
+// Defaults e init global
 // =====================
 function hydrateDefaults() {
   document.getElementById("origin").value = "EZE";
@@ -293,19 +316,18 @@ function hydrateDefaults() {
   document.getElementById("range_days").value = "7";
   document.getElementById("currency").value = "USD";
   document.getElementById("ranking_mode").value = "price";
-
   console.log("✅ hydrateDefaults aplicado");
 }
 
-// =====================
-// Eventos e init global
-// =====================
 function attachEvents() {
   els.form.addEventListener("submit", handleSubmit);
   els.btnReset?.addEventListener("click", hydrateDefaults);
   console.log("✅ Eventos conectados");
 }
 
+// =====================
+// Inicialización
+// =====================
 hydrateDefaults();
 attachEvents();
 setStatus("ok", "Listo. Configurá y ejecutá una búsqueda.");
