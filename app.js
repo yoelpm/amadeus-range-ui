@@ -222,6 +222,36 @@ function buildExecutiveSummary(payload, req){
 // =====================
 // Inicialización global
 // =====================
+// =====================
+// Defaults de formulario
+// =====================
+function hydrateDefaults() {
+  document.getElementById("origin").value = "EZE";
+  document.getElementById("destination").value = "MIA";
+  document.getElementById("date_center").value = "2026-02-10";
+  document.getElementById("return_center").value = "2026-02-24";
+  document.getElementById("range_days").value = "7";
+  document.getElementById("currency").value = "USD";
+  document.getElementById("ranking_mode").value = "price";
+
+  // Si existen los toggles
+  const enableRecommendations = document.getElementById("enable_recommendations");
+  if (enableRecommendations) enableRecommendations.checked = true;
+
+  const enablePriceAnalysis = document.getElementById("enable_price_analysis");
+  if (enablePriceAnalysis) enablePriceAnalysis.checked = true;
+
+  const enableChoicePrediction = document.getElementById("enable_choice_prediction");
+  if (enableChoicePrediction) enableChoicePrediction.checked = true;
+
+  const recoHorizon = document.getElementById("reco_horizon_days");
+  if (recoHorizon) recoHorizon.value = 7;
+
+  const recoTopK = document.getElementById("reco_top_k");
+  if (recoTopK) recoTopK.value = 15;
+
+  console.log("✅ hydrateDefaults aplicado");
+  
 hydrateDefaults();
 attachEvents();
 setStatus("ok", "Listo. Configurá y ejecutá una búsqueda.");
