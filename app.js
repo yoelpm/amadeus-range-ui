@@ -1,31 +1,60 @@
-// ✅ Versión final extendida de Amadeus Range UI
-// Incluye Executive Summary Pro + render completo + análisis técnico detallado
-
 console.log("✅ app.js cargado correctamente en", window.location.href);
+
 const ENDPOINT = "https://amadeus-flight-proxy.yoelpm.workers.dev/search-range";
-
-// =====================
-// Diccionario de aerolíneas (cargado dinámicamente desde airlines.json)
-// =====================
 let AIRLINE_DICT = {};
+let lastOffers = [];
+let lastResponse = null;
+let lastRequest = null;
 
+// =====================
+// 🔹 Utilidades básicas
+// =====================
+function fmtMoney(value, currency = "USD") {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency
+  }).format(value || 0);
+}
+
+function safeDate(str) {
+  if (!str) return "—";
+  const d = new Date(str);
+  return isNaN(d) ? str : d.toISOString().slice(0, 10);
+}
+
+function escapeHTML(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function getDeep(obj, path, def = null) {
+  return path.split(".").reduce((acc, k) => (acc && acc[k] !== undefined ? acc[k] : def), obj);
+}
+
+// =====================
+// 🔹 Carga de aerolíneas
+// =====================
 async function loadAirlines() {
   try {
     const res = await fetch("./airlines.json");
-    if (!res.ok) throw new Error("Error al cargar airlines.json");
+    if (!res.ok) throw new Error("No se pudo cargar airlines.json");
     AIRLINE_DICT = await res.json();
-    console.log("✅ Aerolíneas cargadas:", Object.keys(AIRLINE_DICT).length);
-  } catch (err) {
-    console.warn("⚠️ No se pudieron cargar las aerolíneas:", err.message);
+    console.log(`✅ Aerolíneas cargadas: ${Object.keys(AIRLINE_DICT).length}`);
+  } catch (e) {
+    console.error("❌ Error al cargar airlines.json", e);
     AIRLINE_DICT = {};
   }
 }
 
 function getAirlineName(code) {
-  return AIRLINE_DICT[code?.toUpperCase()] ?? code ?? "—";
+  return AIRLINE_DICT[code] || code || "—";
 }
 
-
+// =====================
+// 🔹 Elementos del DOM
+// =====================
 const els = {
   form: document.getElementById("searchForm"),
   statusBar: document.getElementById("statusBar"),
@@ -43,315 +72,306 @@ const els = {
   recoEmpty: document.getElementById("recoEmpty"),
   techMetrics: document.getElementById("techMetrics"),
   btnExport: document.getElementById("btnExport"),
-  btnReset: document.getElementById("btnReset"),
-  useTimeout: document.getElementById("use_timeout"),
-  timeoutMs: document.getElementById("timeout_ms"),
+  btnReset: document.getElementById("btnReset")
 };
 
-let lastResponse = null, lastOffers = null;
+// =====================
+// 🔹 Networking principal
+// =====================
+async function postJSON(url, data, { timeoutMs = 60000 } = {}) {
+  const ctrl = new AbortController();
+  const id = setTimeout(() => ctrl.abort(), timeoutMs);
+  const resp = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+    signal: ctrl.signal
+  });
+  clearTimeout(id);
+  const json = await resp.json().catch(() => null);
+  return { ok: resp.ok, status: resp.status, data: json };
+}
 
 // =====================
-// Utilidades base
+// 🔹 Helpers de UI
 // =====================
 function setStatus(type, msg) {
-  els.statusBar.classList.remove("hidden", "ok", "err", "warn");
-  els.statusBar.classList.add(type);
   els.statusBar.textContent = msg;
+  els.statusBar.className = `status-bar ${type}`;
+  els.statusBar.classList.remove("hidden");
 }
-function showResults() { els.results.classList.remove("hidden"); }
-function resetUI() {
-  els.results.classList.add("hidden");
-  els.statusBar.textContent = "";
-  els.statusBar.classList.add("hidden");
-  els.statusBar.classList.remove("ok", "err", "warn");
-}
-function fmtMoney(v, cur = "USD") {
-  const n = Number(v);
-  if (!isFinite(n)) return "—";
-  try { return new Intl.NumberFormat("en-US", { style: "currency", currency: cur }).format(n); }
-  catch { return `${n.toFixed(0)} ${cur}`; }
-}
-function escapeHTML(s) { return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
-function safeDate(d) { return d ? d.slice(0, 10) : "—"; }
-function getDeep(o, p, f = null) {
-  try { return p.split(".").reduce((a, k) => a?.[k], o) ?? f; } catch { return f; }
+
+function showResults() {
+  els.results.classList.remove("hidden");
 }
 
 // =====================
-// Eventos principales
+// 🔹 Formulario
 // =====================
-// =====================
-// Networking principal robusto
-// =====================
-async function postJSON(url, body, { timeoutMs } = {}) {
-  const controller = new AbortController();
-  const timeout = timeoutMs ? setTimeout(() => controller.abort(), timeoutMs) : null;
-
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-      signal: controller.signal
-    });
-
-    const data = await response.json().catch(() => null);
-    return { ok: response.ok, status: response.status, data };
-  } catch (err) {
-    if (err.name === "AbortError") {
-      console.warn("⏱️ Request abortada (timeout alcanzado o desconexión).");
-      return { ok: false, status: 0, data: { message: "Timeout alcanzado o conexión interrumpida." } };
-    }
-    console.error("❌ Error de red:", err);
-    return { ok: false, status: 0, data: { message: err.message ?? "Error desconocido" } };
-  } finally {
-    if (timeout) clearTimeout(timeout);
-  }
+function readFormPayload() {
+  return {
+    origin: document.getElementById("origin").value.trim(),
+    destination: document.getElementById("destination").value.trim(),
+    date_center: document.getElementById("date_center").value,
+    return_center: document.getElementById("return_center").value,
+    range_days: Number(document.getElementById("range_days").value),
+    currency: document.getElementById("currency").value,
+    ranking_mode: document.getElementById("ranking_mode").value,
+    enable_recommendations: document.getElementById("enable_recommendations")?.checked ?? true,
+    enable_price_analysis: document.getElementById("enable_price_analysis")?.checked ?? true,
+    enable_choice_prediction: document.getElementById("enable_choice_prediction")?.checked ?? true,
+    reco_horizon_days: Number(document.getElementById("reco_horizon_days")?.value || 7),
+    reco_top_k: Number(document.getElementById("reco_top_k")?.value || 15)
+  };
 }
 
+function hydrateDefaults() {
+  document.getElementById("origin").value = "EZE";
+  document.getElementById("destination").value = "CDG";
+  document.getElementById("date_center").value = "2026-07-02";
+  document.getElementById("return_center").value = "2026-07-14";
+  document.getElementById("range_days").value = "7";
+  document.getElementById("currency").value = "USD";
+  document.getElementById("ranking_mode").value = "price";
+  console.log("✅ hydrateDefaults aplicado");
+}
+
+function attachEvents() {
+  els.form.addEventListener("submit", handleSubmit);
+  document.querySelectorAll("#offersTable th.sortable").forEach(th => {
+    th.addEventListener("click", () => sortOffers(th.dataset.sort));
+  });
+}
+
+// =====================
+// 🔹 Submit principal
+// =====================
 async function handleSubmit(e) {
   e.preventDefault();
-  resetUI();
-
-  const payload = readFormPayload();
-  const errs = validatePayload(payload);
-  if (errs.length) {
-    setStatus("err", errs.join(" "));
-    return;
-  }
-
   setStatus("warn", `Consultando… (${ENDPOINT})`);
 
-  // 🔧 Timeout extendido (90 segundos)
+  const payload = readFormPayload();
   const resp = await postJSON(ENDPOINT, payload, { timeoutMs: 90000 });
 
-  if (!resp.ok || !resp.data) {
-    const msg = resp.data?.message ?? "Sin respuesta del servidor (timeout o error de red).";
-    setStatus("err", `HTTP ${resp.status} → ${msg}`);
-    console.warn("⚠️ handleSubmit abortó:", msg);
+  if (!resp.ok) {
+    setStatus("err", `HTTP ${resp.status}: ${resp.data?.message || "Error de red"}`);
     return;
   }
 
   const data = resp.data;
   lastResponse = data;
-  lastOffers = Array.isArray(data.offers) ? data.offers : [];
+  lastOffers = data.offers ?? [];
 
-  const { html, pills } = buildExecutiveSummaryPro(data, payload);
-  els.execSummary.innerHTML = html;
-  setPills(pills);
-
-  rerenderOffers();
-  renderHeatmap(data.heatmap, payload.currency);
-  renderRecommendations(data.recommendations, payload.currency);
-  renderTechNotes(data);
-
+  renderResults(data, payload);
   showResults();
-  setStatus("ok", `✅ OK. Offers: ${lastOffers.length} • Heatmap: ${data.heatmap?.length ?? 0}`);
+  setStatus("ok", `OK. Offers: ${lastOffers.length} • Heatmap: ${data.heatmap?.length || 0}`);
 }
 
 // =====================
-// Executive Summary Pro (versión final robusta)
+// 🔹 Render general
 // =====================
-function buildExecutiveSummaryPro(data, req) {
-  const offers = Array.isArray(data.offers) ? data.offers : [];
-  const dedup = data?.dedup_stats?.deduped_offers ?? offers.length;
-  const raw = data?.dedup_stats?.raw_offers ?? "—";
-
-  const best = offers.length ? offers[0] : null;
-  const cheapest = getDeep(data, "extrema.cheapest", null);
-  const priciest = getDeep(data, "extrema.priciest", null);
-
-  // Evitar errores por null
-  const econOffers = offers.filter(o => (o.cabin ?? "").toUpperCase().includes("ECONOMY"));
-  const bizOffers = offers.filter(o => (o.cabin ?? "").toUpperCase().includes("BUSINESS"));
-
-  const bestEcon = econOffers.length
-    ? Math.min(...econOffers.map(o => Number(o.total_price ?? o.price ?? Infinity)))
-    : null;
-
-  const bestBiz = bizOffers.length
-    ? Math.min(...bizOffers.map(o => Number(o.total_price ?? o.price ?? Infinity)))
-    : null;
-
-  const parts = [];
-
-  // 🧭 Sección 1: resumen principal
-  parts.push(`
+function renderResults(data, req) {
+  // Executive summary
+  els.execSummary.innerHTML = `
     <h3>🧭 Resumen ejecutivo</h3>
     <p>Ruta: <strong>${req.origin} → ${req.destination}</strong>, ida ${safeDate(req.date_center)}, vuelta ${safeDate(req.return_center)}.</p>
-    <p>Se encontraron <strong>${dedup}</strong> ofertas deduplicadas (${raw} brutas).</p>
-  `);
+    <p>Se encontraron ${data.dedup_stats?.deduped_offers ?? data.offers?.length ?? 0} ofertas deduplicadas (${data.dedup_stats?.raw_offers ?? "—"} brutas).</p>
+  `;
 
-  // 💰 Mejor oferta dentro del rango
-  if (best) {
-    parts.push(`
-      <p>Mejor oferta: <strong>${fmtMoney(best.total_price, best.currency)}</strong> 
-      (${best.airline ?? "—"} / ${best.cabin ?? "—"} / ${best.stops_total ?? 0} escalas).</p>
-    `);
-  }
+  // Ranking
+  rerenderOffers();
 
-  // 💼 Comparación Business vs Economy
-  if (bestEcon && bestBiz && Number.isFinite(bestEcon) && Number.isFinite(bestBiz)) {
-    const ratio = bestBiz / bestEcon;
-    const tag = ratio <= 1.3 ? "✅ comparable" : "❌ premium";
-    parts.push(`
-      <p>Clase Business desde <strong>${fmtMoney(bestBiz, req.currency)}</strong> 
-      (${ratio.toFixed(1)}× Economy) ${tag}.</p>
-    `);
-  }
+  // Heatmap
+  renderHeatmap(data.heatmap ?? [], req.currency);
 
-  // 📊 Precios extremos (heatmap)
-  if (cheapest?.date && (cheapest?.min_price || cheapest?.price)) {
-    const chPrice = cheapest.min_price ?? cheapest.price;
-    parts.push(`<p>Más barato: ${safeDate(cheapest.date)} → ${fmtMoney(chPrice, cheapest.currency ?? req.currency)}.</p>`);
-  }
+  // Recomendaciones
+  renderRecommendations(data.recommendations, req.currency);
 
-  if (priciest?.date && (priciest?.min_price || priciest?.price)) {
-    const prPrice = priciest.min_price ?? priciest.price;
-    parts.push(`<p>Más caro: ${safeDate(priciest.date)} → ${fmtMoney(prPrice, priciest.currency ?? req.currency)}.</p>`);
-  }
+  // Tech metrics
+  const flags = [];
+  if (data.recommendations?.price_analysis === null)
+    flags.push("⚠️ Price analysis: null (timeout probable)");
+  if (data.recommendations?.choice_prediction_applied === false)
+    flags.push("⚠️ Choice prediction: no aplicado");
 
-  // 📅 Recomendaciones fuera de rango
-  const recoCount = data?.recommendations?.cheapest_date_candidates?.length ?? 0;
-  if (recoCount > 0) {
-    parts.push(`<p>🌐 Fechas fuera de rango disponibles (${recoCount}).</p>`);
-  } else if (req.enable_recommendations) {
-    parts.push(`<p>🌐 No se encontraron fechas fuera del rango con mejora significativa.</p>`);
-  }
-
-  return {
-    html: `<div class="summary-pro">${parts.join("")}</div>`,
-    pills: {
-      best: best ? fmtMoney(best.total_price, best.currency ?? req.currency) : "—",
-      range: `${req.date_center} / ${req.return_center} ±${req.range_days}`,
-      reco: recoCount > 0 ? "Reco: sí" : "Reco: no",
-    },
-  };
+  els.techMetrics.textContent = JSON.stringify(
+    { stats: data.stats, dedup_stats: data.dedup_stats, notes: flags },
+    null,
+    2
+  );
 }
 
 // =====================
-// Render UI
+// 🔹 Tabla de ofertas
 // =====================
 function rerenderOffers() {
-  const tb = els.offersTableBody;
-  if (!tb) return;
-  tb.innerHTML = "";
-  if (!lastOffers?.length) return els.offersEmpty.classList.remove("hidden");
+  const tbody = els.offersTableBody;
+  tbody.innerHTML = "";
+  if (!lastOffers?.length) {
+    els.offersEmpty.classList.remove("hidden");
+    return;
+  }
   els.offersEmpty.classList.add("hidden");
-  lastOffers.slice(0, 10).forEach((o, i) => {
+
+  lastOffers.forEach(o => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td class="right">${fmtMoney(o.total_price, o.currency)}</td>
-      <td>${escapeHTML(o.airline ?? "—")}</td>
+      <td>${escapeHTML(getAirlineName(o.airline))}</td>
       <td>${safeDate(o.departure_date)}</td>
       <td>${safeDate(o.return_date)}</td>
-      <td class="right">${o.stops_total ?? 0}</td>
-      <td class="right">${escapeHTML(o.duration_out ?? "—")}</td>
+      <td class="right">${o.stops_total ?? "—"}</td>
+      <td class="right">${o.duration_total ?? "—"}</td>
       <td class="right">${o.score ?? "—"}</td>
-      <td>${o.link ? `<a href="${o.link}" target="_blank">🔗</a>` : "—"}</td>`;
-    tb.appendChild(tr);
+      <td>${o.id ?? "—"}</td>
+    `;
+    tbody.appendChild(tr);
   });
 }
-function renderHeatmap(h, cur) {
-  els.heatmapGrid.innerHTML = "";
-  els.heatmapLegend.innerHTML = "";
-  if (!h?.length) return els.heatmapEmpty.classList.remove("hidden");
+
+// =====================
+// 🔹 Ordenamiento por encabezado
+// =====================
+function sortOffers(key) {
+  if (!lastOffers?.length) return;
+  const dir = (sortOffers.lastKey === key && sortOffers.lastDir === "asc") ? "desc" : "asc";
+  sortOffers.lastKey = key;
+  sortOffers.lastDir = dir;
+  lastOffers.sort((a, b) => {
+    const va = a[key] ?? 0, vb = b[key] ?? 0;
+    return dir === "asc" ? va - vb : vb - va;
+  });
+  rerenderOffers();
+}
+
+// =====================
+// 🔹 Heatmap doble entrada
+// =====================
+function renderHeatmap(heatmap, currency) {
+  const grid = els.heatmapGrid;
+  const legend = els.heatmapLegend;
+  grid.innerHTML = "";
+  legend.innerHTML = "";
+
+  if (!heatmap?.length) {
+    els.heatmapEmpty.classList.remove("hidden");
+    return;
+  }
   els.heatmapEmpty.classList.add("hidden");
 
-  const prices = h.map(x => x.min_price);
-  const min = Math.min(...prices), max = Math.max(...prices);
-  const grid = document.createElement("div");
-  grid.classList.add("heatmap-grid-inner");
+  const depDates = [...new Set(heatmap.map(h => h.departure_date))].sort();
+  const retDates = [...new Set(heatmap.map(h => h.return_date))].sort();
 
-  h.forEach(x => {
-    const ratio = (x.min_price - min) / (max - min);
-    const color = `hsl(${120 - ratio * 120}, 60%, 45%)`;
-    const cell = document.createElement("div");
-    cell.classList.add("heatmap-cell");
-    cell.style.backgroundColor = color;
-    cell.title = `${safeDate(x.date)} → ${fmtMoney(x.min_price, cur)}`;
-    grid.appendChild(cell);
+  const prices = heatmap.map(h => h.min_price || h.total_price || 0);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const range = max - min || 1;
+
+  const table = document.createElement("table");
+  table.className = "heatmap-matrix";
+  const headerRow = document.createElement("tr");
+  headerRow.innerHTML = "<th></th>" + retDates.map(d => `<th>${safeDate(d)}</th>`).join("");
+  table.appendChild(headerRow);
+
+  depDates.forEach(dep => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<th>${safeDate(dep)}</th>`;
+    retDates.forEach(ret => {
+      const cellData = heatmap.find(h => h.departure_date === dep && h.return_date === ret);
+      const price = cellData ? (cellData.min_price || cellData.total_price) : null;
+      const ratio = price ? (price - min) / range : null;
+      const color = !price ? "#222" : ratio < 0.3 ? "#4caf50" : ratio < 0.6 ? "#fbc02d" : "#e53935";
+      const cell = document.createElement("td");
+      cell.style.backgroundColor = color;
+      cell.title = price
+        ? `${fmtMoney(price, currency)}\n${getAirlineName(cellData.airline)}`
+        : "—";
+      row.appendChild(cell);
+    });
+    table.appendChild(row);
   });
 
-  els.heatmapGrid.appendChild(grid);
-  els.heatmapLegend.innerHTML = `<span>${fmtMoney(min, cur)}</span> → <span>${fmtMoney(max, cur)}</span>`;
+  grid.appendChild(table);
+  legend.textContent = `${fmtMoney(min, currency)} → ${fmtMoney(max, currency)}`;
+
+  // Insights automáticos
+  const insights = generateHeatmapInsights(heatmap);
+  const insightsDiv = document.createElement("div");
+  insightsDiv.className = "heatmap-insights";
+  insightsDiv.innerHTML = `<h3>🌡️ Insights automáticos</h3><ul>${insights.map(i => `<li>${i}</li>`).join("")}</ul>`;
+  grid.appendChild(insightsDiv);
 }
-function renderRecommendations(r, cur) {
-  els.recoList.innerHTML = "";
-  if (!r?.cheapest_date_candidates?.length) return els.recoEmpty.classList.remove("hidden");
+
+// =====================
+// 🔹 Insights automáticos del heatmap
+// =====================
+function generateHeatmapInsights(heatmap) {
+  if (!Array.isArray(heatmap) || !heatmap.length) return ["Sin datos suficientes para análisis."];
+
+  const prices = heatmap.map(h => h.min_price || h.total_price || 0).filter(Boolean);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+
+  const airlineCount = {};
+  for (const h of heatmap) {
+    const a = h.airline;
+    if (!a) continue;
+    airlineCount[a] = (airlineCount[a] || 0) + 1;
+  }
+  const topAirlines = Object.entries(airlineCount)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([code]) => getAirlineName(code));
+
+  const cheapest = heatmap
+    .filter(h => (h.min_price || h.total_price) === min)
+    .map(h => safeDate(h.date || h.departure_date));
+
+  return [
+    `Precios bajos concentrados alrededor de ${cheapest.slice(0, 3).join(", ")}.`,
+    `Aerolineas más competitivas: ${topAirlines.join(", ")}.`,
+    `Promedio de tarifas en el rango: ${fmtMoney(avg, heatmap[0]?.currency ?? "USD")}.`,
+    `Diferencia entre mínimo y máximo: ${fmtMoney(max - min, heatmap[0]?.currency ?? "USD")}.`
+  ];
+}
+
+// =====================
+// 🔹 Recomendaciones fuera del rango
+// =====================
+function renderRecommendations(reco, currency) {
+  const list = els.recoList;
+  list.innerHTML = "";
+
+  if (!reco?.cheapest_date_candidates?.length) {
+    els.recoEmpty.classList.remove("hidden");
+    return;
+  }
   els.recoEmpty.classList.add("hidden");
 
-  r.cheapest_date_candidates.slice(0, 5).forEach(x => {
-    const div = document.createElement("div");
-    div.classList.add("reco-item");
-    div.innerHTML = `<strong>${safeDate(x.departure_date)} → ${safeDate(x.return_date)}</strong> ${fmtMoney(x.total_price, x.currency ?? cur)} <span class="tag">fuera de rango</span>`;
-    els.recoList.appendChild(div);
-  });
-}
-function renderTechNotes(d) {
-  const s = d.stats ?? {}, ds = d.dedup_stats ?? {};
-  const lines = [];
-  lines.push(`raw_offers: ${ds.raw_offers ?? "?"} | deduped: ${ds.deduped_offers ?? "?"}`);
-  lines.push(`completadas: ${s.completed ?? "?"} / ${s.started ?? "?"} | fallidas: ${s.failed ?? 0}`);
-  lines.push(`deadline: ${s.hard_deadline_ms ?? "?"} ms | timeout por request: ${s.per_call_timeout_ms ?? "?"} ms`);
-  if (d.recommendations?.price_analysis === null) lines.push("⚠️ Price analysis: null (timeout probable)");
-  if (d.recommendations?.choice_prediction_applied === false) lines.push("⚠️ Choice prediction: no aplicado");
-  els.techMetrics.textContent = lines.join("\n");
-}
-function setPills(p) {
-  const pill = { best: els.pillBest, range: els.pillRange, reco: els.pillReco };
-  Object.entries(pill).forEach(([k, el]) => {
-    const v = p[k];
-    if (v) { el.textContent = v; el.classList.remove("hidden"); }
-    else el.classList.add("hidden");
+  reco.cheapest_date_candidates.slice(0, 5).forEach(r => {
+    const dep = safeDate(r.departure_date ?? r.date_center ?? "—");
+    const ret = safeDate(r.return_date ?? r.date_center ?? "—");
+    const airlineName = getAirlineName(r.airline ?? r.airline_code ?? "—");
+    const price = r.min_price ?? r.total_price ?? 0;
+
+    const item = document.createElement("div");
+    item.className = "reco-item";
+    item.innerHTML = `
+      <strong>${airlineName}</strong> • ${dep} → ${ret} 
+      <span>${fmtMoney(price, currency)}</span> 
+      <em class="muted">fuera de rango</em>
+    `;
+    list.appendChild(item);
   });
 }
 
 // =====================
-// Form helpers
-// =====================
-function readFormPayload() {
-  return {
-    origin: document.getElementById("origin").value.trim().toUpperCase(),
-    destination: document.getElementById("destination").value.trim().toUpperCase(),
-    date_center: document.getElementById("date_center").value,
-    return_center: document.getElementById("return_center").value,
-    range_days: Number(document.getElementById("range_days").value || 7),
-    currency: document.getElementById("currency").value,
-    ranking_mode: document.getElementById("ranking_mode").value,
-    enable_recommendations: document.getElementById("enable_recommendations")?.checked ?? true,
-    reco_horizon_days: 7, reco_top_k: 15,
-    enable_price_analysis: true, enable_choice_prediction: true,
-  };
-}
-function validatePayload(p) {
-  const e = [];
-  if (!/^[A-Z]{3}$/.test(p.origin)) e.push("Origen inválido.");
-  if (!/^[A-Z]{3}$/.test(p.destination)) e.push("Destino inválido.");
-  if (!p.date_center) e.push("Fecha ida requerida.");
-  if (!p.return_center) e.push("Fecha vuelta requerida.");
-  return e;
-}
-function hydrateDefaults() {
-  document.getElementById("origin").value = "EZE";
-  document.getElementById("destination").value = "CDG";
-  document.getElementById("date_center").value = "2026-07-03";
-  document.getElementById("return_center").value = "2026-07-14";
-  document.getElementById("range_days").value = 7;
-}
-function attachEvents() {
-  els.form.addEventListener("submit", handleSubmit);
-  els.btnReset.addEventListener("click", hydrateDefaults);
-  console.log("✅ Eventos conectados");
-}
-
-// =====================
-// Init
+// 🔹 Inicialización
 // =====================
 document.addEventListener("DOMContentLoaded", async () => {
-  await loadAirlines(); // carga el diccionario
+  await loadAirlines();
   hydrateDefaults();
   attachEvents();
   setStatus("ok", "Listo. Configurá y ejecutá una búsqueda.");
 });
-
