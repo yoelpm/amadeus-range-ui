@@ -1,22 +1,3362 @@
 [
-  {"iata": "EZE", "ciudad": "Buenos Aires", "nombre": "Ministro Pistarini", "pais": "Argentina"},
-  {"iata": "AEP", "ciudad": "Buenos Aires", "nombre": "Aeroparque Jorge Newbery", "pais": "Argentina"},
-  {"iata": "COR", "ciudad": "Córdoba", "nombre": "Ingeniero Taravella", "pais": "Argentina"},
-  {"iata": "MIA", "ciudad": "Miami", "nombre": "Aeropuerto Internacional de Miami", "pais": "Estados Unidos"},
-  {"iata": "JFK", "ciudad": "Nueva York", "nombre": "John F. Kennedy", "pais": "Estados Unidos"},
-  {"iata": "MAD", "ciudad": "Madrid", "nombre": "Adolfo Suárez Madrid-Barajas", "pais": "España"},
-  {"iata": "BCN", "ciudad": "Barcelona", "nombre": "El Prat", "pais": "España"},
-  {"iata": "CDG", "ciudad": "París", "nombre": "Charles de Gaulle", "pais": "Francia"},
-  {"iata": "FCO", "ciudad": "Roma", "nombre": "Fiumicino Leonardo da Vinci", "pais": "Italia"},
-  {"iata": "GRU", "ciudad": "São Paulo", "nombre": "Guarulhos", "pais": "Brasil"},
-  {"iata": "SCL", "ciudad": "Santiago de Chile", "nombre": "Arturo Merino Benítez", "pais": "Chile"},
-  {"iata": "MEX", "ciudad": "Ciudad de México", "nombre": "Benito Juárez", "pais": "México"},
-  {"iata": "CUN", "ciudad": "Cancún", "nombre": "Internacional de Cancún", "pais": "México"},
-  {"iata": "LHR", "ciudad": "Londres", "nombre": "Heathrow", "pais": "Reino Unido"},
-  {"iata": "AMS", "ciudad": "Ámsterdam", "nombre": "Schiphol", "pais": "Países Bajos"},
-  {"iata": "FRA", "ciudad": "Fráncfort", "nombre": "Frankfurt am Main", "pais": "Alemania"},
-  {"iata": "IST", "ciudad": "Estambul", "nombre": "Istanbul Airport", "pais": "Turquía"},
-  {"iata": "DXB", "ciudad": "Dubái", "nombre": "Dubai International", "pais": "Emiratos Árabes Unidos"},
-  {"iata": "HND", "ciudad": "Tokio", "nombre": "Haneda", "pais": "Japón"},
-  {"iata": "SYD", "ciudad": "Sídney", "nombre": "Kingsford Smith", "pais": "Australia"}
+  {
+    "iata": "A000",
+    "ciudad": "Ciudad 1",
+    "nombre": "Aeropuerto Internacional 1",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A001",
+    "ciudad": "Ciudad 2",
+    "nombre": "Aeropuerto Internacional 2",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A002",
+    "ciudad": "Ciudad 3",
+    "nombre": "Aeropuerto Internacional 3",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A003",
+    "ciudad": "Ciudad 4",
+    "nombre": "Aeropuerto Internacional 4",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A004",
+    "ciudad": "Ciudad 5",
+    "nombre": "Aeropuerto Internacional 5",
+    "pais": "España"
+  },
+  {
+    "iata": "A005",
+    "ciudad": "Ciudad 6",
+    "nombre": "Aeropuerto Internacional 6",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A006",
+    "ciudad": "Ciudad 7",
+    "nombre": "Aeropuerto Internacional 7",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A007",
+    "ciudad": "Ciudad 8",
+    "nombre": "Aeropuerto Internacional 8",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A008",
+    "ciudad": "Ciudad 9",
+    "nombre": "Aeropuerto Internacional 9",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A009",
+    "ciudad": "Ciudad 10",
+    "nombre": "Aeropuerto Internacional 10",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A010",
+    "ciudad": "Ciudad 11",
+    "nombre": "Aeropuerto Internacional 11",
+    "pais": "México"
+  },
+  {
+    "iata": "A011",
+    "ciudad": "Ciudad 12",
+    "nombre": "Aeropuerto Internacional 12",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A012",
+    "ciudad": "Ciudad 13",
+    "nombre": "Aeropuerto Internacional 13",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A013",
+    "ciudad": "Ciudad 14",
+    "nombre": "Aeropuerto Internacional 14",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A014",
+    "ciudad": "Ciudad 15",
+    "nombre": "Aeropuerto Internacional 15",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A015",
+    "ciudad": "Ciudad 16",
+    "nombre": "Aeropuerto Internacional 16",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A016",
+    "ciudad": "Ciudad 17",
+    "nombre": "Aeropuerto Internacional 17",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A017",
+    "ciudad": "Ciudad 18",
+    "nombre": "Aeropuerto Internacional 18",
+    "pais": "China"
+  },
+  {
+    "iata": "A018",
+    "ciudad": "Ciudad 19",
+    "nombre": "Aeropuerto Internacional 19",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A019",
+    "ciudad": "Ciudad 20",
+    "nombre": "Aeropuerto Internacional 20",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A020",
+    "ciudad": "Ciudad 21",
+    "nombre": "Aeropuerto Internacional 21",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A021",
+    "ciudad": "Ciudad 22",
+    "nombre": "Aeropuerto Internacional 22",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A022",
+    "ciudad": "Ciudad 23",
+    "nombre": "Aeropuerto Internacional 23",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A023",
+    "ciudad": "Ciudad 24",
+    "nombre": "Aeropuerto Internacional 24",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A024",
+    "ciudad": "Ciudad 25",
+    "nombre": "Aeropuerto Internacional 25",
+    "pais": "España"
+  },
+  {
+    "iata": "A025",
+    "ciudad": "Ciudad 26",
+    "nombre": "Aeropuerto Internacional 26",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A026",
+    "ciudad": "Ciudad 27",
+    "nombre": "Aeropuerto Internacional 27",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A027",
+    "ciudad": "Ciudad 28",
+    "nombre": "Aeropuerto Internacional 28",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A028",
+    "ciudad": "Ciudad 29",
+    "nombre": "Aeropuerto Internacional 29",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A029",
+    "ciudad": "Ciudad 30",
+    "nombre": "Aeropuerto Internacional 30",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A030",
+    "ciudad": "Ciudad 31",
+    "nombre": "Aeropuerto Internacional 31",
+    "pais": "México"
+  },
+  {
+    "iata": "A031",
+    "ciudad": "Ciudad 32",
+    "nombre": "Aeropuerto Internacional 32",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A032",
+    "ciudad": "Ciudad 33",
+    "nombre": "Aeropuerto Internacional 33",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A033",
+    "ciudad": "Ciudad 34",
+    "nombre": "Aeropuerto Internacional 34",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A034",
+    "ciudad": "Ciudad 35",
+    "nombre": "Aeropuerto Internacional 35",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A035",
+    "ciudad": "Ciudad 36",
+    "nombre": "Aeropuerto Internacional 36",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A036",
+    "ciudad": "Ciudad 37",
+    "nombre": "Aeropuerto Internacional 37",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A037",
+    "ciudad": "Ciudad 38",
+    "nombre": "Aeropuerto Internacional 38",
+    "pais": "China"
+  },
+  {
+    "iata": "A038",
+    "ciudad": "Ciudad 39",
+    "nombre": "Aeropuerto Internacional 39",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A039",
+    "ciudad": "Ciudad 40",
+    "nombre": "Aeropuerto Internacional 40",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A040",
+    "ciudad": "Ciudad 41",
+    "nombre": "Aeropuerto Internacional 41",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A041",
+    "ciudad": "Ciudad 42",
+    "nombre": "Aeropuerto Internacional 42",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A042",
+    "ciudad": "Ciudad 43",
+    "nombre": "Aeropuerto Internacional 43",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A043",
+    "ciudad": "Ciudad 44",
+    "nombre": "Aeropuerto Internacional 44",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A044",
+    "ciudad": "Ciudad 45",
+    "nombre": "Aeropuerto Internacional 45",
+    "pais": "España"
+  },
+  {
+    "iata": "A045",
+    "ciudad": "Ciudad 46",
+    "nombre": "Aeropuerto Internacional 46",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A046",
+    "ciudad": "Ciudad 47",
+    "nombre": "Aeropuerto Internacional 47",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A047",
+    "ciudad": "Ciudad 48",
+    "nombre": "Aeropuerto Internacional 48",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A048",
+    "ciudad": "Ciudad 49",
+    "nombre": "Aeropuerto Internacional 49",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A049",
+    "ciudad": "Ciudad 50",
+    "nombre": "Aeropuerto Internacional 50",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A050",
+    "ciudad": "Ciudad 51",
+    "nombre": "Aeropuerto Internacional 51",
+    "pais": "México"
+  },
+  {
+    "iata": "A051",
+    "ciudad": "Ciudad 52",
+    "nombre": "Aeropuerto Internacional 52",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A052",
+    "ciudad": "Ciudad 53",
+    "nombre": "Aeropuerto Internacional 53",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A053",
+    "ciudad": "Ciudad 54",
+    "nombre": "Aeropuerto Internacional 54",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A054",
+    "ciudad": "Ciudad 55",
+    "nombre": "Aeropuerto Internacional 55",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A055",
+    "ciudad": "Ciudad 56",
+    "nombre": "Aeropuerto Internacional 56",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A056",
+    "ciudad": "Ciudad 57",
+    "nombre": "Aeropuerto Internacional 57",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A057",
+    "ciudad": "Ciudad 58",
+    "nombre": "Aeropuerto Internacional 58",
+    "pais": "China"
+  },
+  {
+    "iata": "A058",
+    "ciudad": "Ciudad 59",
+    "nombre": "Aeropuerto Internacional 59",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A059",
+    "ciudad": "Ciudad 60",
+    "nombre": "Aeropuerto Internacional 60",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A060",
+    "ciudad": "Ciudad 61",
+    "nombre": "Aeropuerto Internacional 61",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A061",
+    "ciudad": "Ciudad 62",
+    "nombre": "Aeropuerto Internacional 62",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A062",
+    "ciudad": "Ciudad 63",
+    "nombre": "Aeropuerto Internacional 63",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A063",
+    "ciudad": "Ciudad 64",
+    "nombre": "Aeropuerto Internacional 64",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A064",
+    "ciudad": "Ciudad 65",
+    "nombre": "Aeropuerto Internacional 65",
+    "pais": "España"
+  },
+  {
+    "iata": "A065",
+    "ciudad": "Ciudad 66",
+    "nombre": "Aeropuerto Internacional 66",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A066",
+    "ciudad": "Ciudad 67",
+    "nombre": "Aeropuerto Internacional 67",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A067",
+    "ciudad": "Ciudad 68",
+    "nombre": "Aeropuerto Internacional 68",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A068",
+    "ciudad": "Ciudad 69",
+    "nombre": "Aeropuerto Internacional 69",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A069",
+    "ciudad": "Ciudad 70",
+    "nombre": "Aeropuerto Internacional 70",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A070",
+    "ciudad": "Ciudad 71",
+    "nombre": "Aeropuerto Internacional 71",
+    "pais": "México"
+  },
+  {
+    "iata": "A071",
+    "ciudad": "Ciudad 72",
+    "nombre": "Aeropuerto Internacional 72",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A072",
+    "ciudad": "Ciudad 73",
+    "nombre": "Aeropuerto Internacional 73",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A073",
+    "ciudad": "Ciudad 74",
+    "nombre": "Aeropuerto Internacional 74",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A074",
+    "ciudad": "Ciudad 75",
+    "nombre": "Aeropuerto Internacional 75",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A075",
+    "ciudad": "Ciudad 76",
+    "nombre": "Aeropuerto Internacional 76",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A076",
+    "ciudad": "Ciudad 77",
+    "nombre": "Aeropuerto Internacional 77",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A077",
+    "ciudad": "Ciudad 78",
+    "nombre": "Aeropuerto Internacional 78",
+    "pais": "China"
+  },
+  {
+    "iata": "A078",
+    "ciudad": "Ciudad 79",
+    "nombre": "Aeropuerto Internacional 79",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A079",
+    "ciudad": "Ciudad 80",
+    "nombre": "Aeropuerto Internacional 80",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A080",
+    "ciudad": "Ciudad 81",
+    "nombre": "Aeropuerto Internacional 81",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A081",
+    "ciudad": "Ciudad 82",
+    "nombre": "Aeropuerto Internacional 82",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A082",
+    "ciudad": "Ciudad 83",
+    "nombre": "Aeropuerto Internacional 83",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A083",
+    "ciudad": "Ciudad 84",
+    "nombre": "Aeropuerto Internacional 84",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A084",
+    "ciudad": "Ciudad 85",
+    "nombre": "Aeropuerto Internacional 85",
+    "pais": "España"
+  },
+  {
+    "iata": "A085",
+    "ciudad": "Ciudad 86",
+    "nombre": "Aeropuerto Internacional 86",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A086",
+    "ciudad": "Ciudad 87",
+    "nombre": "Aeropuerto Internacional 87",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A087",
+    "ciudad": "Ciudad 88",
+    "nombre": "Aeropuerto Internacional 88",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A088",
+    "ciudad": "Ciudad 89",
+    "nombre": "Aeropuerto Internacional 89",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A089",
+    "ciudad": "Ciudad 90",
+    "nombre": "Aeropuerto Internacional 90",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A090",
+    "ciudad": "Ciudad 91",
+    "nombre": "Aeropuerto Internacional 91",
+    "pais": "México"
+  },
+  {
+    "iata": "A091",
+    "ciudad": "Ciudad 92",
+    "nombre": "Aeropuerto Internacional 92",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A092",
+    "ciudad": "Ciudad 93",
+    "nombre": "Aeropuerto Internacional 93",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A093",
+    "ciudad": "Ciudad 94",
+    "nombre": "Aeropuerto Internacional 94",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A094",
+    "ciudad": "Ciudad 95",
+    "nombre": "Aeropuerto Internacional 95",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A095",
+    "ciudad": "Ciudad 96",
+    "nombre": "Aeropuerto Internacional 96",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A096",
+    "ciudad": "Ciudad 97",
+    "nombre": "Aeropuerto Internacional 97",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A097",
+    "ciudad": "Ciudad 98",
+    "nombre": "Aeropuerto Internacional 98",
+    "pais": "China"
+  },
+  {
+    "iata": "A098",
+    "ciudad": "Ciudad 99",
+    "nombre": "Aeropuerto Internacional 99",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A099",
+    "ciudad": "Ciudad 100",
+    "nombre": "Aeropuerto Internacional 100",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A100",
+    "ciudad": "Ciudad 101",
+    "nombre": "Aeropuerto Internacional 101",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A101",
+    "ciudad": "Ciudad 102",
+    "nombre": "Aeropuerto Internacional 102",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A102",
+    "ciudad": "Ciudad 103",
+    "nombre": "Aeropuerto Internacional 103",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A103",
+    "ciudad": "Ciudad 104",
+    "nombre": "Aeropuerto Internacional 104",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A104",
+    "ciudad": "Ciudad 105",
+    "nombre": "Aeropuerto Internacional 105",
+    "pais": "España"
+  },
+  {
+    "iata": "A105",
+    "ciudad": "Ciudad 106",
+    "nombre": "Aeropuerto Internacional 106",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A106",
+    "ciudad": "Ciudad 107",
+    "nombre": "Aeropuerto Internacional 107",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A107",
+    "ciudad": "Ciudad 108",
+    "nombre": "Aeropuerto Internacional 108",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A108",
+    "ciudad": "Ciudad 109",
+    "nombre": "Aeropuerto Internacional 109",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A109",
+    "ciudad": "Ciudad 110",
+    "nombre": "Aeropuerto Internacional 110",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A110",
+    "ciudad": "Ciudad 111",
+    "nombre": "Aeropuerto Internacional 111",
+    "pais": "México"
+  },
+  {
+    "iata": "A111",
+    "ciudad": "Ciudad 112",
+    "nombre": "Aeropuerto Internacional 112",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A112",
+    "ciudad": "Ciudad 113",
+    "nombre": "Aeropuerto Internacional 113",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A113",
+    "ciudad": "Ciudad 114",
+    "nombre": "Aeropuerto Internacional 114",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A114",
+    "ciudad": "Ciudad 115",
+    "nombre": "Aeropuerto Internacional 115",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A115",
+    "ciudad": "Ciudad 116",
+    "nombre": "Aeropuerto Internacional 116",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A116",
+    "ciudad": "Ciudad 117",
+    "nombre": "Aeropuerto Internacional 117",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A117",
+    "ciudad": "Ciudad 118",
+    "nombre": "Aeropuerto Internacional 118",
+    "pais": "China"
+  },
+  {
+    "iata": "A118",
+    "ciudad": "Ciudad 119",
+    "nombre": "Aeropuerto Internacional 119",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A119",
+    "ciudad": "Ciudad 120",
+    "nombre": "Aeropuerto Internacional 120",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A120",
+    "ciudad": "Ciudad 121",
+    "nombre": "Aeropuerto Internacional 121",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A121",
+    "ciudad": "Ciudad 122",
+    "nombre": "Aeropuerto Internacional 122",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A122",
+    "ciudad": "Ciudad 123",
+    "nombre": "Aeropuerto Internacional 123",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A123",
+    "ciudad": "Ciudad 124",
+    "nombre": "Aeropuerto Internacional 124",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A124",
+    "ciudad": "Ciudad 125",
+    "nombre": "Aeropuerto Internacional 125",
+    "pais": "España"
+  },
+  {
+    "iata": "A125",
+    "ciudad": "Ciudad 126",
+    "nombre": "Aeropuerto Internacional 126",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A126",
+    "ciudad": "Ciudad 127",
+    "nombre": "Aeropuerto Internacional 127",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A127",
+    "ciudad": "Ciudad 128",
+    "nombre": "Aeropuerto Internacional 128",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A128",
+    "ciudad": "Ciudad 129",
+    "nombre": "Aeropuerto Internacional 129",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A129",
+    "ciudad": "Ciudad 130",
+    "nombre": "Aeropuerto Internacional 130",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A130",
+    "ciudad": "Ciudad 131",
+    "nombre": "Aeropuerto Internacional 131",
+    "pais": "México"
+  },
+  {
+    "iata": "A131",
+    "ciudad": "Ciudad 132",
+    "nombre": "Aeropuerto Internacional 132",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A132",
+    "ciudad": "Ciudad 133",
+    "nombre": "Aeropuerto Internacional 133",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A133",
+    "ciudad": "Ciudad 134",
+    "nombre": "Aeropuerto Internacional 134",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A134",
+    "ciudad": "Ciudad 135",
+    "nombre": "Aeropuerto Internacional 135",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A135",
+    "ciudad": "Ciudad 136",
+    "nombre": "Aeropuerto Internacional 136",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A136",
+    "ciudad": "Ciudad 137",
+    "nombre": "Aeropuerto Internacional 137",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A137",
+    "ciudad": "Ciudad 138",
+    "nombre": "Aeropuerto Internacional 138",
+    "pais": "China"
+  },
+  {
+    "iata": "A138",
+    "ciudad": "Ciudad 139",
+    "nombre": "Aeropuerto Internacional 139",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A139",
+    "ciudad": "Ciudad 140",
+    "nombre": "Aeropuerto Internacional 140",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A140",
+    "ciudad": "Ciudad 141",
+    "nombre": "Aeropuerto Internacional 141",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A141",
+    "ciudad": "Ciudad 142",
+    "nombre": "Aeropuerto Internacional 142",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A142",
+    "ciudad": "Ciudad 143",
+    "nombre": "Aeropuerto Internacional 143",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A143",
+    "ciudad": "Ciudad 144",
+    "nombre": "Aeropuerto Internacional 144",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A144",
+    "ciudad": "Ciudad 145",
+    "nombre": "Aeropuerto Internacional 145",
+    "pais": "España"
+  },
+  {
+    "iata": "A145",
+    "ciudad": "Ciudad 146",
+    "nombre": "Aeropuerto Internacional 146",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A146",
+    "ciudad": "Ciudad 147",
+    "nombre": "Aeropuerto Internacional 147",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A147",
+    "ciudad": "Ciudad 148",
+    "nombre": "Aeropuerto Internacional 148",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A148",
+    "ciudad": "Ciudad 149",
+    "nombre": "Aeropuerto Internacional 149",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A149",
+    "ciudad": "Ciudad 150",
+    "nombre": "Aeropuerto Internacional 150",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A150",
+    "ciudad": "Ciudad 151",
+    "nombre": "Aeropuerto Internacional 151",
+    "pais": "México"
+  },
+  {
+    "iata": "A151",
+    "ciudad": "Ciudad 152",
+    "nombre": "Aeropuerto Internacional 152",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A152",
+    "ciudad": "Ciudad 153",
+    "nombre": "Aeropuerto Internacional 153",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A153",
+    "ciudad": "Ciudad 154",
+    "nombre": "Aeropuerto Internacional 154",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A154",
+    "ciudad": "Ciudad 155",
+    "nombre": "Aeropuerto Internacional 155",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A155",
+    "ciudad": "Ciudad 156",
+    "nombre": "Aeropuerto Internacional 156",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A156",
+    "ciudad": "Ciudad 157",
+    "nombre": "Aeropuerto Internacional 157",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A157",
+    "ciudad": "Ciudad 158",
+    "nombre": "Aeropuerto Internacional 158",
+    "pais": "China"
+  },
+  {
+    "iata": "A158",
+    "ciudad": "Ciudad 159",
+    "nombre": "Aeropuerto Internacional 159",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A159",
+    "ciudad": "Ciudad 160",
+    "nombre": "Aeropuerto Internacional 160",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A160",
+    "ciudad": "Ciudad 161",
+    "nombre": "Aeropuerto Internacional 161",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A161",
+    "ciudad": "Ciudad 162",
+    "nombre": "Aeropuerto Internacional 162",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A162",
+    "ciudad": "Ciudad 163",
+    "nombre": "Aeropuerto Internacional 163",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A163",
+    "ciudad": "Ciudad 164",
+    "nombre": "Aeropuerto Internacional 164",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A164",
+    "ciudad": "Ciudad 165",
+    "nombre": "Aeropuerto Internacional 165",
+    "pais": "España"
+  },
+  {
+    "iata": "A165",
+    "ciudad": "Ciudad 166",
+    "nombre": "Aeropuerto Internacional 166",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A166",
+    "ciudad": "Ciudad 167",
+    "nombre": "Aeropuerto Internacional 167",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A167",
+    "ciudad": "Ciudad 168",
+    "nombre": "Aeropuerto Internacional 168",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A168",
+    "ciudad": "Ciudad 169",
+    "nombre": "Aeropuerto Internacional 169",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A169",
+    "ciudad": "Ciudad 170",
+    "nombre": "Aeropuerto Internacional 170",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A170",
+    "ciudad": "Ciudad 171",
+    "nombre": "Aeropuerto Internacional 171",
+    "pais": "México"
+  },
+  {
+    "iata": "A171",
+    "ciudad": "Ciudad 172",
+    "nombre": "Aeropuerto Internacional 172",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A172",
+    "ciudad": "Ciudad 173",
+    "nombre": "Aeropuerto Internacional 173",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A173",
+    "ciudad": "Ciudad 174",
+    "nombre": "Aeropuerto Internacional 174",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A174",
+    "ciudad": "Ciudad 175",
+    "nombre": "Aeropuerto Internacional 175",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A175",
+    "ciudad": "Ciudad 176",
+    "nombre": "Aeropuerto Internacional 176",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A176",
+    "ciudad": "Ciudad 177",
+    "nombre": "Aeropuerto Internacional 177",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A177",
+    "ciudad": "Ciudad 178",
+    "nombre": "Aeropuerto Internacional 178",
+    "pais": "China"
+  },
+  {
+    "iata": "A178",
+    "ciudad": "Ciudad 179",
+    "nombre": "Aeropuerto Internacional 179",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A179",
+    "ciudad": "Ciudad 180",
+    "nombre": "Aeropuerto Internacional 180",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A180",
+    "ciudad": "Ciudad 181",
+    "nombre": "Aeropuerto Internacional 181",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A181",
+    "ciudad": "Ciudad 182",
+    "nombre": "Aeropuerto Internacional 182",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A182",
+    "ciudad": "Ciudad 183",
+    "nombre": "Aeropuerto Internacional 183",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A183",
+    "ciudad": "Ciudad 184",
+    "nombre": "Aeropuerto Internacional 184",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A184",
+    "ciudad": "Ciudad 185",
+    "nombre": "Aeropuerto Internacional 185",
+    "pais": "España"
+  },
+  {
+    "iata": "A185",
+    "ciudad": "Ciudad 186",
+    "nombre": "Aeropuerto Internacional 186",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A186",
+    "ciudad": "Ciudad 187",
+    "nombre": "Aeropuerto Internacional 187",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A187",
+    "ciudad": "Ciudad 188",
+    "nombre": "Aeropuerto Internacional 188",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A188",
+    "ciudad": "Ciudad 189",
+    "nombre": "Aeropuerto Internacional 189",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A189",
+    "ciudad": "Ciudad 190",
+    "nombre": "Aeropuerto Internacional 190",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A190",
+    "ciudad": "Ciudad 191",
+    "nombre": "Aeropuerto Internacional 191",
+    "pais": "México"
+  },
+  {
+    "iata": "A191",
+    "ciudad": "Ciudad 192",
+    "nombre": "Aeropuerto Internacional 192",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A192",
+    "ciudad": "Ciudad 193",
+    "nombre": "Aeropuerto Internacional 193",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A193",
+    "ciudad": "Ciudad 194",
+    "nombre": "Aeropuerto Internacional 194",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A194",
+    "ciudad": "Ciudad 195",
+    "nombre": "Aeropuerto Internacional 195",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A195",
+    "ciudad": "Ciudad 196",
+    "nombre": "Aeropuerto Internacional 196",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A196",
+    "ciudad": "Ciudad 197",
+    "nombre": "Aeropuerto Internacional 197",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A197",
+    "ciudad": "Ciudad 198",
+    "nombre": "Aeropuerto Internacional 198",
+    "pais": "China"
+  },
+  {
+    "iata": "A198",
+    "ciudad": "Ciudad 199",
+    "nombre": "Aeropuerto Internacional 199",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A199",
+    "ciudad": "Ciudad 200",
+    "nombre": "Aeropuerto Internacional 200",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A200",
+    "ciudad": "Ciudad 201",
+    "nombre": "Aeropuerto Internacional 201",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A201",
+    "ciudad": "Ciudad 202",
+    "nombre": "Aeropuerto Internacional 202",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A202",
+    "ciudad": "Ciudad 203",
+    "nombre": "Aeropuerto Internacional 203",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A203",
+    "ciudad": "Ciudad 204",
+    "nombre": "Aeropuerto Internacional 204",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A204",
+    "ciudad": "Ciudad 205",
+    "nombre": "Aeropuerto Internacional 205",
+    "pais": "España"
+  },
+  {
+    "iata": "A205",
+    "ciudad": "Ciudad 206",
+    "nombre": "Aeropuerto Internacional 206",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A206",
+    "ciudad": "Ciudad 207",
+    "nombre": "Aeropuerto Internacional 207",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A207",
+    "ciudad": "Ciudad 208",
+    "nombre": "Aeropuerto Internacional 208",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A208",
+    "ciudad": "Ciudad 209",
+    "nombre": "Aeropuerto Internacional 209",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A209",
+    "ciudad": "Ciudad 210",
+    "nombre": "Aeropuerto Internacional 210",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A210",
+    "ciudad": "Ciudad 211",
+    "nombre": "Aeropuerto Internacional 211",
+    "pais": "México"
+  },
+  {
+    "iata": "A211",
+    "ciudad": "Ciudad 212",
+    "nombre": "Aeropuerto Internacional 212",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A212",
+    "ciudad": "Ciudad 213",
+    "nombre": "Aeropuerto Internacional 213",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A213",
+    "ciudad": "Ciudad 214",
+    "nombre": "Aeropuerto Internacional 214",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A214",
+    "ciudad": "Ciudad 215",
+    "nombre": "Aeropuerto Internacional 215",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A215",
+    "ciudad": "Ciudad 216",
+    "nombre": "Aeropuerto Internacional 216",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A216",
+    "ciudad": "Ciudad 217",
+    "nombre": "Aeropuerto Internacional 217",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A217",
+    "ciudad": "Ciudad 218",
+    "nombre": "Aeropuerto Internacional 218",
+    "pais": "China"
+  },
+  {
+    "iata": "A218",
+    "ciudad": "Ciudad 219",
+    "nombre": "Aeropuerto Internacional 219",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A219",
+    "ciudad": "Ciudad 220",
+    "nombre": "Aeropuerto Internacional 220",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A220",
+    "ciudad": "Ciudad 221",
+    "nombre": "Aeropuerto Internacional 221",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A221",
+    "ciudad": "Ciudad 222",
+    "nombre": "Aeropuerto Internacional 222",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A222",
+    "ciudad": "Ciudad 223",
+    "nombre": "Aeropuerto Internacional 223",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A223",
+    "ciudad": "Ciudad 224",
+    "nombre": "Aeropuerto Internacional 224",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A224",
+    "ciudad": "Ciudad 225",
+    "nombre": "Aeropuerto Internacional 225",
+    "pais": "España"
+  },
+  {
+    "iata": "A225",
+    "ciudad": "Ciudad 226",
+    "nombre": "Aeropuerto Internacional 226",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A226",
+    "ciudad": "Ciudad 227",
+    "nombre": "Aeropuerto Internacional 227",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A227",
+    "ciudad": "Ciudad 228",
+    "nombre": "Aeropuerto Internacional 228",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A228",
+    "ciudad": "Ciudad 229",
+    "nombre": "Aeropuerto Internacional 229",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A229",
+    "ciudad": "Ciudad 230",
+    "nombre": "Aeropuerto Internacional 230",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A230",
+    "ciudad": "Ciudad 231",
+    "nombre": "Aeropuerto Internacional 231",
+    "pais": "México"
+  },
+  {
+    "iata": "A231",
+    "ciudad": "Ciudad 232",
+    "nombre": "Aeropuerto Internacional 232",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A232",
+    "ciudad": "Ciudad 233",
+    "nombre": "Aeropuerto Internacional 233",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A233",
+    "ciudad": "Ciudad 234",
+    "nombre": "Aeropuerto Internacional 234",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A234",
+    "ciudad": "Ciudad 235",
+    "nombre": "Aeropuerto Internacional 235",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A235",
+    "ciudad": "Ciudad 236",
+    "nombre": "Aeropuerto Internacional 236",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A236",
+    "ciudad": "Ciudad 237",
+    "nombre": "Aeropuerto Internacional 237",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A237",
+    "ciudad": "Ciudad 238",
+    "nombre": "Aeropuerto Internacional 238",
+    "pais": "China"
+  },
+  {
+    "iata": "A238",
+    "ciudad": "Ciudad 239",
+    "nombre": "Aeropuerto Internacional 239",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A239",
+    "ciudad": "Ciudad 240",
+    "nombre": "Aeropuerto Internacional 240",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A240",
+    "ciudad": "Ciudad 241",
+    "nombre": "Aeropuerto Internacional 241",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A241",
+    "ciudad": "Ciudad 242",
+    "nombre": "Aeropuerto Internacional 242",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A242",
+    "ciudad": "Ciudad 243",
+    "nombre": "Aeropuerto Internacional 243",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A243",
+    "ciudad": "Ciudad 244",
+    "nombre": "Aeropuerto Internacional 244",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A244",
+    "ciudad": "Ciudad 245",
+    "nombre": "Aeropuerto Internacional 245",
+    "pais": "España"
+  },
+  {
+    "iata": "A245",
+    "ciudad": "Ciudad 246",
+    "nombre": "Aeropuerto Internacional 246",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A246",
+    "ciudad": "Ciudad 247",
+    "nombre": "Aeropuerto Internacional 247",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A247",
+    "ciudad": "Ciudad 248",
+    "nombre": "Aeropuerto Internacional 248",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A248",
+    "ciudad": "Ciudad 249",
+    "nombre": "Aeropuerto Internacional 249",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A249",
+    "ciudad": "Ciudad 250",
+    "nombre": "Aeropuerto Internacional 250",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A250",
+    "ciudad": "Ciudad 251",
+    "nombre": "Aeropuerto Internacional 251",
+    "pais": "México"
+  },
+  {
+    "iata": "A251",
+    "ciudad": "Ciudad 252",
+    "nombre": "Aeropuerto Internacional 252",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A252",
+    "ciudad": "Ciudad 253",
+    "nombre": "Aeropuerto Internacional 253",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A253",
+    "ciudad": "Ciudad 254",
+    "nombre": "Aeropuerto Internacional 254",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A254",
+    "ciudad": "Ciudad 255",
+    "nombre": "Aeropuerto Internacional 255",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A255",
+    "ciudad": "Ciudad 256",
+    "nombre": "Aeropuerto Internacional 256",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A256",
+    "ciudad": "Ciudad 257",
+    "nombre": "Aeropuerto Internacional 257",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A257",
+    "ciudad": "Ciudad 258",
+    "nombre": "Aeropuerto Internacional 258",
+    "pais": "China"
+  },
+  {
+    "iata": "A258",
+    "ciudad": "Ciudad 259",
+    "nombre": "Aeropuerto Internacional 259",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A259",
+    "ciudad": "Ciudad 260",
+    "nombre": "Aeropuerto Internacional 260",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A260",
+    "ciudad": "Ciudad 261",
+    "nombre": "Aeropuerto Internacional 261",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A261",
+    "ciudad": "Ciudad 262",
+    "nombre": "Aeropuerto Internacional 262",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A262",
+    "ciudad": "Ciudad 263",
+    "nombre": "Aeropuerto Internacional 263",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A263",
+    "ciudad": "Ciudad 264",
+    "nombre": "Aeropuerto Internacional 264",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A264",
+    "ciudad": "Ciudad 265",
+    "nombre": "Aeropuerto Internacional 265",
+    "pais": "España"
+  },
+  {
+    "iata": "A265",
+    "ciudad": "Ciudad 266",
+    "nombre": "Aeropuerto Internacional 266",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A266",
+    "ciudad": "Ciudad 267",
+    "nombre": "Aeropuerto Internacional 267",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A267",
+    "ciudad": "Ciudad 268",
+    "nombre": "Aeropuerto Internacional 268",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A268",
+    "ciudad": "Ciudad 269",
+    "nombre": "Aeropuerto Internacional 269",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A269",
+    "ciudad": "Ciudad 270",
+    "nombre": "Aeropuerto Internacional 270",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A270",
+    "ciudad": "Ciudad 271",
+    "nombre": "Aeropuerto Internacional 271",
+    "pais": "México"
+  },
+  {
+    "iata": "A271",
+    "ciudad": "Ciudad 272",
+    "nombre": "Aeropuerto Internacional 272",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A272",
+    "ciudad": "Ciudad 273",
+    "nombre": "Aeropuerto Internacional 273",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A273",
+    "ciudad": "Ciudad 274",
+    "nombre": "Aeropuerto Internacional 274",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A274",
+    "ciudad": "Ciudad 275",
+    "nombre": "Aeropuerto Internacional 275",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A275",
+    "ciudad": "Ciudad 276",
+    "nombre": "Aeropuerto Internacional 276",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A276",
+    "ciudad": "Ciudad 277",
+    "nombre": "Aeropuerto Internacional 277",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A277",
+    "ciudad": "Ciudad 278",
+    "nombre": "Aeropuerto Internacional 278",
+    "pais": "China"
+  },
+  {
+    "iata": "A278",
+    "ciudad": "Ciudad 279",
+    "nombre": "Aeropuerto Internacional 279",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A279",
+    "ciudad": "Ciudad 280",
+    "nombre": "Aeropuerto Internacional 280",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A280",
+    "ciudad": "Ciudad 281",
+    "nombre": "Aeropuerto Internacional 281",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A281",
+    "ciudad": "Ciudad 282",
+    "nombre": "Aeropuerto Internacional 282",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A282",
+    "ciudad": "Ciudad 283",
+    "nombre": "Aeropuerto Internacional 283",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A283",
+    "ciudad": "Ciudad 284",
+    "nombre": "Aeropuerto Internacional 284",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A284",
+    "ciudad": "Ciudad 285",
+    "nombre": "Aeropuerto Internacional 285",
+    "pais": "España"
+  },
+  {
+    "iata": "A285",
+    "ciudad": "Ciudad 286",
+    "nombre": "Aeropuerto Internacional 286",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A286",
+    "ciudad": "Ciudad 287",
+    "nombre": "Aeropuerto Internacional 287",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A287",
+    "ciudad": "Ciudad 288",
+    "nombre": "Aeropuerto Internacional 288",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A288",
+    "ciudad": "Ciudad 289",
+    "nombre": "Aeropuerto Internacional 289",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A289",
+    "ciudad": "Ciudad 290",
+    "nombre": "Aeropuerto Internacional 290",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A290",
+    "ciudad": "Ciudad 291",
+    "nombre": "Aeropuerto Internacional 291",
+    "pais": "México"
+  },
+  {
+    "iata": "A291",
+    "ciudad": "Ciudad 292",
+    "nombre": "Aeropuerto Internacional 292",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A292",
+    "ciudad": "Ciudad 293",
+    "nombre": "Aeropuerto Internacional 293",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A293",
+    "ciudad": "Ciudad 294",
+    "nombre": "Aeropuerto Internacional 294",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A294",
+    "ciudad": "Ciudad 295",
+    "nombre": "Aeropuerto Internacional 295",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A295",
+    "ciudad": "Ciudad 296",
+    "nombre": "Aeropuerto Internacional 296",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A296",
+    "ciudad": "Ciudad 297",
+    "nombre": "Aeropuerto Internacional 297",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A297",
+    "ciudad": "Ciudad 298",
+    "nombre": "Aeropuerto Internacional 298",
+    "pais": "China"
+  },
+  {
+    "iata": "A298",
+    "ciudad": "Ciudad 299",
+    "nombre": "Aeropuerto Internacional 299",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A299",
+    "ciudad": "Ciudad 300",
+    "nombre": "Aeropuerto Internacional 300",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A300",
+    "ciudad": "Ciudad 301",
+    "nombre": "Aeropuerto Internacional 301",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A301",
+    "ciudad": "Ciudad 302",
+    "nombre": "Aeropuerto Internacional 302",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A302",
+    "ciudad": "Ciudad 303",
+    "nombre": "Aeropuerto Internacional 303",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A303",
+    "ciudad": "Ciudad 304",
+    "nombre": "Aeropuerto Internacional 304",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A304",
+    "ciudad": "Ciudad 305",
+    "nombre": "Aeropuerto Internacional 305",
+    "pais": "España"
+  },
+  {
+    "iata": "A305",
+    "ciudad": "Ciudad 306",
+    "nombre": "Aeropuerto Internacional 306",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A306",
+    "ciudad": "Ciudad 307",
+    "nombre": "Aeropuerto Internacional 307",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A307",
+    "ciudad": "Ciudad 308",
+    "nombre": "Aeropuerto Internacional 308",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A308",
+    "ciudad": "Ciudad 309",
+    "nombre": "Aeropuerto Internacional 309",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A309",
+    "ciudad": "Ciudad 310",
+    "nombre": "Aeropuerto Internacional 310",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A310",
+    "ciudad": "Ciudad 311",
+    "nombre": "Aeropuerto Internacional 311",
+    "pais": "México"
+  },
+  {
+    "iata": "A311",
+    "ciudad": "Ciudad 312",
+    "nombre": "Aeropuerto Internacional 312",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A312",
+    "ciudad": "Ciudad 313",
+    "nombre": "Aeropuerto Internacional 313",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A313",
+    "ciudad": "Ciudad 314",
+    "nombre": "Aeropuerto Internacional 314",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A314",
+    "ciudad": "Ciudad 315",
+    "nombre": "Aeropuerto Internacional 315",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A315",
+    "ciudad": "Ciudad 316",
+    "nombre": "Aeropuerto Internacional 316",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A316",
+    "ciudad": "Ciudad 317",
+    "nombre": "Aeropuerto Internacional 317",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A317",
+    "ciudad": "Ciudad 318",
+    "nombre": "Aeropuerto Internacional 318",
+    "pais": "China"
+  },
+  {
+    "iata": "A318",
+    "ciudad": "Ciudad 319",
+    "nombre": "Aeropuerto Internacional 319",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A319",
+    "ciudad": "Ciudad 320",
+    "nombre": "Aeropuerto Internacional 320",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A320",
+    "ciudad": "Ciudad 321",
+    "nombre": "Aeropuerto Internacional 321",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A321",
+    "ciudad": "Ciudad 322",
+    "nombre": "Aeropuerto Internacional 322",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A322",
+    "ciudad": "Ciudad 323",
+    "nombre": "Aeropuerto Internacional 323",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A323",
+    "ciudad": "Ciudad 324",
+    "nombre": "Aeropuerto Internacional 324",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A324",
+    "ciudad": "Ciudad 325",
+    "nombre": "Aeropuerto Internacional 325",
+    "pais": "España"
+  },
+  {
+    "iata": "A325",
+    "ciudad": "Ciudad 326",
+    "nombre": "Aeropuerto Internacional 326",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A326",
+    "ciudad": "Ciudad 327",
+    "nombre": "Aeropuerto Internacional 327",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A327",
+    "ciudad": "Ciudad 328",
+    "nombre": "Aeropuerto Internacional 328",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A328",
+    "ciudad": "Ciudad 329",
+    "nombre": "Aeropuerto Internacional 329",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A329",
+    "ciudad": "Ciudad 330",
+    "nombre": "Aeropuerto Internacional 330",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A330",
+    "ciudad": "Ciudad 331",
+    "nombre": "Aeropuerto Internacional 331",
+    "pais": "México"
+  },
+  {
+    "iata": "A331",
+    "ciudad": "Ciudad 332",
+    "nombre": "Aeropuerto Internacional 332",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A332",
+    "ciudad": "Ciudad 333",
+    "nombre": "Aeropuerto Internacional 333",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A333",
+    "ciudad": "Ciudad 334",
+    "nombre": "Aeropuerto Internacional 334",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A334",
+    "ciudad": "Ciudad 335",
+    "nombre": "Aeropuerto Internacional 335",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A335",
+    "ciudad": "Ciudad 336",
+    "nombre": "Aeropuerto Internacional 336",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A336",
+    "ciudad": "Ciudad 337",
+    "nombre": "Aeropuerto Internacional 337",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A337",
+    "ciudad": "Ciudad 338",
+    "nombre": "Aeropuerto Internacional 338",
+    "pais": "China"
+  },
+  {
+    "iata": "A338",
+    "ciudad": "Ciudad 339",
+    "nombre": "Aeropuerto Internacional 339",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A339",
+    "ciudad": "Ciudad 340",
+    "nombre": "Aeropuerto Internacional 340",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A340",
+    "ciudad": "Ciudad 341",
+    "nombre": "Aeropuerto Internacional 341",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A341",
+    "ciudad": "Ciudad 342",
+    "nombre": "Aeropuerto Internacional 342",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A342",
+    "ciudad": "Ciudad 343",
+    "nombre": "Aeropuerto Internacional 343",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A343",
+    "ciudad": "Ciudad 344",
+    "nombre": "Aeropuerto Internacional 344",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A344",
+    "ciudad": "Ciudad 345",
+    "nombre": "Aeropuerto Internacional 345",
+    "pais": "España"
+  },
+  {
+    "iata": "A345",
+    "ciudad": "Ciudad 346",
+    "nombre": "Aeropuerto Internacional 346",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A346",
+    "ciudad": "Ciudad 347",
+    "nombre": "Aeropuerto Internacional 347",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A347",
+    "ciudad": "Ciudad 348",
+    "nombre": "Aeropuerto Internacional 348",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A348",
+    "ciudad": "Ciudad 349",
+    "nombre": "Aeropuerto Internacional 349",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A349",
+    "ciudad": "Ciudad 350",
+    "nombre": "Aeropuerto Internacional 350",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A350",
+    "ciudad": "Ciudad 351",
+    "nombre": "Aeropuerto Internacional 351",
+    "pais": "México"
+  },
+  {
+    "iata": "A351",
+    "ciudad": "Ciudad 352",
+    "nombre": "Aeropuerto Internacional 352",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A352",
+    "ciudad": "Ciudad 353",
+    "nombre": "Aeropuerto Internacional 353",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A353",
+    "ciudad": "Ciudad 354",
+    "nombre": "Aeropuerto Internacional 354",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A354",
+    "ciudad": "Ciudad 355",
+    "nombre": "Aeropuerto Internacional 355",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A355",
+    "ciudad": "Ciudad 356",
+    "nombre": "Aeropuerto Internacional 356",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A356",
+    "ciudad": "Ciudad 357",
+    "nombre": "Aeropuerto Internacional 357",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A357",
+    "ciudad": "Ciudad 358",
+    "nombre": "Aeropuerto Internacional 358",
+    "pais": "China"
+  },
+  {
+    "iata": "A358",
+    "ciudad": "Ciudad 359",
+    "nombre": "Aeropuerto Internacional 359",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A359",
+    "ciudad": "Ciudad 360",
+    "nombre": "Aeropuerto Internacional 360",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A360",
+    "ciudad": "Ciudad 361",
+    "nombre": "Aeropuerto Internacional 361",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A361",
+    "ciudad": "Ciudad 362",
+    "nombre": "Aeropuerto Internacional 362",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A362",
+    "ciudad": "Ciudad 363",
+    "nombre": "Aeropuerto Internacional 363",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A363",
+    "ciudad": "Ciudad 364",
+    "nombre": "Aeropuerto Internacional 364",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A364",
+    "ciudad": "Ciudad 365",
+    "nombre": "Aeropuerto Internacional 365",
+    "pais": "España"
+  },
+  {
+    "iata": "A365",
+    "ciudad": "Ciudad 366",
+    "nombre": "Aeropuerto Internacional 366",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A366",
+    "ciudad": "Ciudad 367",
+    "nombre": "Aeropuerto Internacional 367",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A367",
+    "ciudad": "Ciudad 368",
+    "nombre": "Aeropuerto Internacional 368",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A368",
+    "ciudad": "Ciudad 369",
+    "nombre": "Aeropuerto Internacional 369",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A369",
+    "ciudad": "Ciudad 370",
+    "nombre": "Aeropuerto Internacional 370",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A370",
+    "ciudad": "Ciudad 371",
+    "nombre": "Aeropuerto Internacional 371",
+    "pais": "México"
+  },
+  {
+    "iata": "A371",
+    "ciudad": "Ciudad 372",
+    "nombre": "Aeropuerto Internacional 372",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A372",
+    "ciudad": "Ciudad 373",
+    "nombre": "Aeropuerto Internacional 373",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A373",
+    "ciudad": "Ciudad 374",
+    "nombre": "Aeropuerto Internacional 374",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A374",
+    "ciudad": "Ciudad 375",
+    "nombre": "Aeropuerto Internacional 375",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A375",
+    "ciudad": "Ciudad 376",
+    "nombre": "Aeropuerto Internacional 376",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A376",
+    "ciudad": "Ciudad 377",
+    "nombre": "Aeropuerto Internacional 377",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A377",
+    "ciudad": "Ciudad 378",
+    "nombre": "Aeropuerto Internacional 378",
+    "pais": "China"
+  },
+  {
+    "iata": "A378",
+    "ciudad": "Ciudad 379",
+    "nombre": "Aeropuerto Internacional 379",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A379",
+    "ciudad": "Ciudad 380",
+    "nombre": "Aeropuerto Internacional 380",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A380",
+    "ciudad": "Ciudad 381",
+    "nombre": "Aeropuerto Internacional 381",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A381",
+    "ciudad": "Ciudad 382",
+    "nombre": "Aeropuerto Internacional 382",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A382",
+    "ciudad": "Ciudad 383",
+    "nombre": "Aeropuerto Internacional 383",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A383",
+    "ciudad": "Ciudad 384",
+    "nombre": "Aeropuerto Internacional 384",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A384",
+    "ciudad": "Ciudad 385",
+    "nombre": "Aeropuerto Internacional 385",
+    "pais": "España"
+  },
+  {
+    "iata": "A385",
+    "ciudad": "Ciudad 386",
+    "nombre": "Aeropuerto Internacional 386",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A386",
+    "ciudad": "Ciudad 387",
+    "nombre": "Aeropuerto Internacional 387",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A387",
+    "ciudad": "Ciudad 388",
+    "nombre": "Aeropuerto Internacional 388",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A388",
+    "ciudad": "Ciudad 389",
+    "nombre": "Aeropuerto Internacional 389",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A389",
+    "ciudad": "Ciudad 390",
+    "nombre": "Aeropuerto Internacional 390",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A390",
+    "ciudad": "Ciudad 391",
+    "nombre": "Aeropuerto Internacional 391",
+    "pais": "México"
+  },
+  {
+    "iata": "A391",
+    "ciudad": "Ciudad 392",
+    "nombre": "Aeropuerto Internacional 392",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A392",
+    "ciudad": "Ciudad 393",
+    "nombre": "Aeropuerto Internacional 393",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A393",
+    "ciudad": "Ciudad 394",
+    "nombre": "Aeropuerto Internacional 394",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A394",
+    "ciudad": "Ciudad 395",
+    "nombre": "Aeropuerto Internacional 395",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A395",
+    "ciudad": "Ciudad 396",
+    "nombre": "Aeropuerto Internacional 396",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A396",
+    "ciudad": "Ciudad 397",
+    "nombre": "Aeropuerto Internacional 397",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A397",
+    "ciudad": "Ciudad 398",
+    "nombre": "Aeropuerto Internacional 398",
+    "pais": "China"
+  },
+  {
+    "iata": "A398",
+    "ciudad": "Ciudad 399",
+    "nombre": "Aeropuerto Internacional 399",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A399",
+    "ciudad": "Ciudad 400",
+    "nombre": "Aeropuerto Internacional 400",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A400",
+    "ciudad": "Ciudad 401",
+    "nombre": "Aeropuerto Internacional 401",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A401",
+    "ciudad": "Ciudad 402",
+    "nombre": "Aeropuerto Internacional 402",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A402",
+    "ciudad": "Ciudad 403",
+    "nombre": "Aeropuerto Internacional 403",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A403",
+    "ciudad": "Ciudad 404",
+    "nombre": "Aeropuerto Internacional 404",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A404",
+    "ciudad": "Ciudad 405",
+    "nombre": "Aeropuerto Internacional 405",
+    "pais": "España"
+  },
+  {
+    "iata": "A405",
+    "ciudad": "Ciudad 406",
+    "nombre": "Aeropuerto Internacional 406",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A406",
+    "ciudad": "Ciudad 407",
+    "nombre": "Aeropuerto Internacional 407",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A407",
+    "ciudad": "Ciudad 408",
+    "nombre": "Aeropuerto Internacional 408",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A408",
+    "ciudad": "Ciudad 409",
+    "nombre": "Aeropuerto Internacional 409",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A409",
+    "ciudad": "Ciudad 410",
+    "nombre": "Aeropuerto Internacional 410",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A410",
+    "ciudad": "Ciudad 411",
+    "nombre": "Aeropuerto Internacional 411",
+    "pais": "México"
+  },
+  {
+    "iata": "A411",
+    "ciudad": "Ciudad 412",
+    "nombre": "Aeropuerto Internacional 412",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A412",
+    "ciudad": "Ciudad 413",
+    "nombre": "Aeropuerto Internacional 413",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A413",
+    "ciudad": "Ciudad 414",
+    "nombre": "Aeropuerto Internacional 414",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A414",
+    "ciudad": "Ciudad 415",
+    "nombre": "Aeropuerto Internacional 415",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A415",
+    "ciudad": "Ciudad 416",
+    "nombre": "Aeropuerto Internacional 416",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A416",
+    "ciudad": "Ciudad 417",
+    "nombre": "Aeropuerto Internacional 417",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A417",
+    "ciudad": "Ciudad 418",
+    "nombre": "Aeropuerto Internacional 418",
+    "pais": "China"
+  },
+  {
+    "iata": "A418",
+    "ciudad": "Ciudad 419",
+    "nombre": "Aeropuerto Internacional 419",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A419",
+    "ciudad": "Ciudad 420",
+    "nombre": "Aeropuerto Internacional 420",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A420",
+    "ciudad": "Ciudad 421",
+    "nombre": "Aeropuerto Internacional 421",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A421",
+    "ciudad": "Ciudad 422",
+    "nombre": "Aeropuerto Internacional 422",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A422",
+    "ciudad": "Ciudad 423",
+    "nombre": "Aeropuerto Internacional 423",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A423",
+    "ciudad": "Ciudad 424",
+    "nombre": "Aeropuerto Internacional 424",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A424",
+    "ciudad": "Ciudad 425",
+    "nombre": "Aeropuerto Internacional 425",
+    "pais": "España"
+  },
+  {
+    "iata": "A425",
+    "ciudad": "Ciudad 426",
+    "nombre": "Aeropuerto Internacional 426",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A426",
+    "ciudad": "Ciudad 427",
+    "nombre": "Aeropuerto Internacional 427",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A427",
+    "ciudad": "Ciudad 428",
+    "nombre": "Aeropuerto Internacional 428",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A428",
+    "ciudad": "Ciudad 429",
+    "nombre": "Aeropuerto Internacional 429",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A429",
+    "ciudad": "Ciudad 430",
+    "nombre": "Aeropuerto Internacional 430",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A430",
+    "ciudad": "Ciudad 431",
+    "nombre": "Aeropuerto Internacional 431",
+    "pais": "México"
+  },
+  {
+    "iata": "A431",
+    "ciudad": "Ciudad 432",
+    "nombre": "Aeropuerto Internacional 432",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A432",
+    "ciudad": "Ciudad 433",
+    "nombre": "Aeropuerto Internacional 433",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A433",
+    "ciudad": "Ciudad 434",
+    "nombre": "Aeropuerto Internacional 434",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A434",
+    "ciudad": "Ciudad 435",
+    "nombre": "Aeropuerto Internacional 435",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A435",
+    "ciudad": "Ciudad 436",
+    "nombre": "Aeropuerto Internacional 436",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A436",
+    "ciudad": "Ciudad 437",
+    "nombre": "Aeropuerto Internacional 437",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A437",
+    "ciudad": "Ciudad 438",
+    "nombre": "Aeropuerto Internacional 438",
+    "pais": "China"
+  },
+  {
+    "iata": "A438",
+    "ciudad": "Ciudad 439",
+    "nombre": "Aeropuerto Internacional 439",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A439",
+    "ciudad": "Ciudad 440",
+    "nombre": "Aeropuerto Internacional 440",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A440",
+    "ciudad": "Ciudad 441",
+    "nombre": "Aeropuerto Internacional 441",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A441",
+    "ciudad": "Ciudad 442",
+    "nombre": "Aeropuerto Internacional 442",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A442",
+    "ciudad": "Ciudad 443",
+    "nombre": "Aeropuerto Internacional 443",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A443",
+    "ciudad": "Ciudad 444",
+    "nombre": "Aeropuerto Internacional 444",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A444",
+    "ciudad": "Ciudad 445",
+    "nombre": "Aeropuerto Internacional 445",
+    "pais": "España"
+  },
+  {
+    "iata": "A445",
+    "ciudad": "Ciudad 446",
+    "nombre": "Aeropuerto Internacional 446",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A446",
+    "ciudad": "Ciudad 447",
+    "nombre": "Aeropuerto Internacional 447",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A447",
+    "ciudad": "Ciudad 448",
+    "nombre": "Aeropuerto Internacional 448",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A448",
+    "ciudad": "Ciudad 449",
+    "nombre": "Aeropuerto Internacional 449",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A449",
+    "ciudad": "Ciudad 450",
+    "nombre": "Aeropuerto Internacional 450",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A450",
+    "ciudad": "Ciudad 451",
+    "nombre": "Aeropuerto Internacional 451",
+    "pais": "México"
+  },
+  {
+    "iata": "A451",
+    "ciudad": "Ciudad 452",
+    "nombre": "Aeropuerto Internacional 452",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A452",
+    "ciudad": "Ciudad 453",
+    "nombre": "Aeropuerto Internacional 453",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A453",
+    "ciudad": "Ciudad 454",
+    "nombre": "Aeropuerto Internacional 454",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A454",
+    "ciudad": "Ciudad 455",
+    "nombre": "Aeropuerto Internacional 455",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A455",
+    "ciudad": "Ciudad 456",
+    "nombre": "Aeropuerto Internacional 456",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A456",
+    "ciudad": "Ciudad 457",
+    "nombre": "Aeropuerto Internacional 457",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A457",
+    "ciudad": "Ciudad 458",
+    "nombre": "Aeropuerto Internacional 458",
+    "pais": "China"
+  },
+  {
+    "iata": "A458",
+    "ciudad": "Ciudad 459",
+    "nombre": "Aeropuerto Internacional 459",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A459",
+    "ciudad": "Ciudad 460",
+    "nombre": "Aeropuerto Internacional 460",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A460",
+    "ciudad": "Ciudad 461",
+    "nombre": "Aeropuerto Internacional 461",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A461",
+    "ciudad": "Ciudad 462",
+    "nombre": "Aeropuerto Internacional 462",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A462",
+    "ciudad": "Ciudad 463",
+    "nombre": "Aeropuerto Internacional 463",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A463",
+    "ciudad": "Ciudad 464",
+    "nombre": "Aeropuerto Internacional 464",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A464",
+    "ciudad": "Ciudad 465",
+    "nombre": "Aeropuerto Internacional 465",
+    "pais": "España"
+  },
+  {
+    "iata": "A465",
+    "ciudad": "Ciudad 466",
+    "nombre": "Aeropuerto Internacional 466",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A466",
+    "ciudad": "Ciudad 467",
+    "nombre": "Aeropuerto Internacional 467",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A467",
+    "ciudad": "Ciudad 468",
+    "nombre": "Aeropuerto Internacional 468",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A468",
+    "ciudad": "Ciudad 469",
+    "nombre": "Aeropuerto Internacional 469",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A469",
+    "ciudad": "Ciudad 470",
+    "nombre": "Aeropuerto Internacional 470",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A470",
+    "ciudad": "Ciudad 471",
+    "nombre": "Aeropuerto Internacional 471",
+    "pais": "México"
+  },
+  {
+    "iata": "A471",
+    "ciudad": "Ciudad 472",
+    "nombre": "Aeropuerto Internacional 472",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A472",
+    "ciudad": "Ciudad 473",
+    "nombre": "Aeropuerto Internacional 473",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A473",
+    "ciudad": "Ciudad 474",
+    "nombre": "Aeropuerto Internacional 474",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A474",
+    "ciudad": "Ciudad 475",
+    "nombre": "Aeropuerto Internacional 475",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A475",
+    "ciudad": "Ciudad 476",
+    "nombre": "Aeropuerto Internacional 476",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A476",
+    "ciudad": "Ciudad 477",
+    "nombre": "Aeropuerto Internacional 477",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A477",
+    "ciudad": "Ciudad 478",
+    "nombre": "Aeropuerto Internacional 478",
+    "pais": "China"
+  },
+  {
+    "iata": "A478",
+    "ciudad": "Ciudad 479",
+    "nombre": "Aeropuerto Internacional 479",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A479",
+    "ciudad": "Ciudad 480",
+    "nombre": "Aeropuerto Internacional 480",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A480",
+    "ciudad": "Ciudad 481",
+    "nombre": "Aeropuerto Internacional 481",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A481",
+    "ciudad": "Ciudad 482",
+    "nombre": "Aeropuerto Internacional 482",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A482",
+    "ciudad": "Ciudad 483",
+    "nombre": "Aeropuerto Internacional 483",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A483",
+    "ciudad": "Ciudad 484",
+    "nombre": "Aeropuerto Internacional 484",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A484",
+    "ciudad": "Ciudad 485",
+    "nombre": "Aeropuerto Internacional 485",
+    "pais": "España"
+  },
+  {
+    "iata": "A485",
+    "ciudad": "Ciudad 486",
+    "nombre": "Aeropuerto Internacional 486",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A486",
+    "ciudad": "Ciudad 487",
+    "nombre": "Aeropuerto Internacional 487",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A487",
+    "ciudad": "Ciudad 488",
+    "nombre": "Aeropuerto Internacional 488",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A488",
+    "ciudad": "Ciudad 489",
+    "nombre": "Aeropuerto Internacional 489",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A489",
+    "ciudad": "Ciudad 490",
+    "nombre": "Aeropuerto Internacional 490",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A490",
+    "ciudad": "Ciudad 491",
+    "nombre": "Aeropuerto Internacional 491",
+    "pais": "México"
+  },
+  {
+    "iata": "A491",
+    "ciudad": "Ciudad 492",
+    "nombre": "Aeropuerto Internacional 492",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A492",
+    "ciudad": "Ciudad 493",
+    "nombre": "Aeropuerto Internacional 493",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A493",
+    "ciudad": "Ciudad 494",
+    "nombre": "Aeropuerto Internacional 494",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A494",
+    "ciudad": "Ciudad 495",
+    "nombre": "Aeropuerto Internacional 495",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A495",
+    "ciudad": "Ciudad 496",
+    "nombre": "Aeropuerto Internacional 496",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A496",
+    "ciudad": "Ciudad 497",
+    "nombre": "Aeropuerto Internacional 497",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A497",
+    "ciudad": "Ciudad 498",
+    "nombre": "Aeropuerto Internacional 498",
+    "pais": "China"
+  },
+  {
+    "iata": "A498",
+    "ciudad": "Ciudad 499",
+    "nombre": "Aeropuerto Internacional 499",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A499",
+    "ciudad": "Ciudad 500",
+    "nombre": "Aeropuerto Internacional 500",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A500",
+    "ciudad": "Ciudad 501",
+    "nombre": "Aeropuerto Internacional 501",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A501",
+    "ciudad": "Ciudad 502",
+    "nombre": "Aeropuerto Internacional 502",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A502",
+    "ciudad": "Ciudad 503",
+    "nombre": "Aeropuerto Internacional 503",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A503",
+    "ciudad": "Ciudad 504",
+    "nombre": "Aeropuerto Internacional 504",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A504",
+    "ciudad": "Ciudad 505",
+    "nombre": "Aeropuerto Internacional 505",
+    "pais": "España"
+  },
+  {
+    "iata": "A505",
+    "ciudad": "Ciudad 506",
+    "nombre": "Aeropuerto Internacional 506",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A506",
+    "ciudad": "Ciudad 507",
+    "nombre": "Aeropuerto Internacional 507",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A507",
+    "ciudad": "Ciudad 508",
+    "nombre": "Aeropuerto Internacional 508",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A508",
+    "ciudad": "Ciudad 509",
+    "nombre": "Aeropuerto Internacional 509",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A509",
+    "ciudad": "Ciudad 510",
+    "nombre": "Aeropuerto Internacional 510",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A510",
+    "ciudad": "Ciudad 511",
+    "nombre": "Aeropuerto Internacional 511",
+    "pais": "México"
+  },
+  {
+    "iata": "A511",
+    "ciudad": "Ciudad 512",
+    "nombre": "Aeropuerto Internacional 512",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A512",
+    "ciudad": "Ciudad 513",
+    "nombre": "Aeropuerto Internacional 513",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A513",
+    "ciudad": "Ciudad 514",
+    "nombre": "Aeropuerto Internacional 514",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A514",
+    "ciudad": "Ciudad 515",
+    "nombre": "Aeropuerto Internacional 515",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A515",
+    "ciudad": "Ciudad 516",
+    "nombre": "Aeropuerto Internacional 516",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A516",
+    "ciudad": "Ciudad 517",
+    "nombre": "Aeropuerto Internacional 517",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A517",
+    "ciudad": "Ciudad 518",
+    "nombre": "Aeropuerto Internacional 518",
+    "pais": "China"
+  },
+  {
+    "iata": "A518",
+    "ciudad": "Ciudad 519",
+    "nombre": "Aeropuerto Internacional 519",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A519",
+    "ciudad": "Ciudad 520",
+    "nombre": "Aeropuerto Internacional 520",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A520",
+    "ciudad": "Ciudad 521",
+    "nombre": "Aeropuerto Internacional 521",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A521",
+    "ciudad": "Ciudad 522",
+    "nombre": "Aeropuerto Internacional 522",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A522",
+    "ciudad": "Ciudad 523",
+    "nombre": "Aeropuerto Internacional 523",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A523",
+    "ciudad": "Ciudad 524",
+    "nombre": "Aeropuerto Internacional 524",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A524",
+    "ciudad": "Ciudad 525",
+    "nombre": "Aeropuerto Internacional 525",
+    "pais": "España"
+  },
+  {
+    "iata": "A525",
+    "ciudad": "Ciudad 526",
+    "nombre": "Aeropuerto Internacional 526",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A526",
+    "ciudad": "Ciudad 527",
+    "nombre": "Aeropuerto Internacional 527",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A527",
+    "ciudad": "Ciudad 528",
+    "nombre": "Aeropuerto Internacional 528",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A528",
+    "ciudad": "Ciudad 529",
+    "nombre": "Aeropuerto Internacional 529",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A529",
+    "ciudad": "Ciudad 530",
+    "nombre": "Aeropuerto Internacional 530",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A530",
+    "ciudad": "Ciudad 531",
+    "nombre": "Aeropuerto Internacional 531",
+    "pais": "México"
+  },
+  {
+    "iata": "A531",
+    "ciudad": "Ciudad 532",
+    "nombre": "Aeropuerto Internacional 532",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A532",
+    "ciudad": "Ciudad 533",
+    "nombre": "Aeropuerto Internacional 533",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A533",
+    "ciudad": "Ciudad 534",
+    "nombre": "Aeropuerto Internacional 534",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A534",
+    "ciudad": "Ciudad 535",
+    "nombre": "Aeropuerto Internacional 535",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A535",
+    "ciudad": "Ciudad 536",
+    "nombre": "Aeropuerto Internacional 536",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A536",
+    "ciudad": "Ciudad 537",
+    "nombre": "Aeropuerto Internacional 537",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A537",
+    "ciudad": "Ciudad 538",
+    "nombre": "Aeropuerto Internacional 538",
+    "pais": "China"
+  },
+  {
+    "iata": "A538",
+    "ciudad": "Ciudad 539",
+    "nombre": "Aeropuerto Internacional 539",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A539",
+    "ciudad": "Ciudad 540",
+    "nombre": "Aeropuerto Internacional 540",
+    "pais": "Turquía"
+  },
+  {
+    "iata": "A540",
+    "ciudad": "Ciudad 541",
+    "nombre": "Aeropuerto Internacional 541",
+    "pais": "Argentina"
+  },
+  {
+    "iata": "A541",
+    "ciudad": "Ciudad 542",
+    "nombre": "Aeropuerto Internacional 542",
+    "pais": "Brasil"
+  },
+  {
+    "iata": "A542",
+    "ciudad": "Ciudad 543",
+    "nombre": "Aeropuerto Internacional 543",
+    "pais": "Chile"
+  },
+  {
+    "iata": "A543",
+    "ciudad": "Ciudad 544",
+    "nombre": "Aeropuerto Internacional 544",
+    "pais": "Estados Unidos"
+  },
+  {
+    "iata": "A544",
+    "ciudad": "Ciudad 545",
+    "nombre": "Aeropuerto Internacional 545",
+    "pais": "España"
+  },
+  {
+    "iata": "A545",
+    "ciudad": "Ciudad 546",
+    "nombre": "Aeropuerto Internacional 546",
+    "pais": "Italia"
+  },
+  {
+    "iata": "A546",
+    "ciudad": "Ciudad 547",
+    "nombre": "Aeropuerto Internacional 547",
+    "pais": "Reino Unido"
+  },
+  {
+    "iata": "A547",
+    "ciudad": "Ciudad 548",
+    "nombre": "Aeropuerto Internacional 548",
+    "pais": "Francia"
+  },
+  {
+    "iata": "A548",
+    "ciudad": "Ciudad 549",
+    "nombre": "Aeropuerto Internacional 549",
+    "pais": "Alemania"
+  },
+  {
+    "iata": "A549",
+    "ciudad": "Ciudad 550",
+    "nombre": "Aeropuerto Internacional 550",
+    "pais": "Países Bajos"
+  },
+  {
+    "iata": "A550",
+    "ciudad": "Ciudad 551",
+    "nombre": "Aeropuerto Internacional 551",
+    "pais": "México"
+  },
+  {
+    "iata": "A551",
+    "ciudad": "Ciudad 552",
+    "nombre": "Aeropuerto Internacional 552",
+    "pais": "Colombia"
+  },
+  {
+    "iata": "A552",
+    "ciudad": "Ciudad 553",
+    "nombre": "Aeropuerto Internacional 553",
+    "pais": "Perú"
+  },
+  {
+    "iata": "A553",
+    "ciudad": "Ciudad 554",
+    "nombre": "Aeropuerto Internacional 554",
+    "pais": "Canadá"
+  },
+  {
+    "iata": "A554",
+    "ciudad": "Ciudad 555",
+    "nombre": "Aeropuerto Internacional 555",
+    "pais": "Australia"
+  },
+  {
+    "iata": "A555",
+    "ciudad": "Ciudad 556",
+    "nombre": "Aeropuerto Internacional 556",
+    "pais": "Nueva Zelanda"
+  },
+  {
+    "iata": "A556",
+    "ciudad": "Ciudad 557",
+    "nombre": "Aeropuerto Internacional 557",
+    "pais": "Japón"
+  },
+  {
+    "iata": "A557",
+    "ciudad": "Ciudad 558",
+    "nombre": "Aeropuerto Internacional 558",
+    "pais": "China"
+  },
+  {
+    "iata": "A558",
+    "ciudad": "Ciudad 559",
+    "nombre": "Aeropuerto Internacional 559",
+    "pais": "Sudáfrica"
+  },
+  {
+    "iata": "A559",
+    "ciudad": "Ciudad 560",
+    "nombre": "Aeropuerto Internacional 560",
+    "pais": "Turquía"
+  }
 ]
